@@ -1,5 +1,5 @@
 import { useRef, FC, forwardRef, createRef } from 'react';
-import { viewChild, configure, view, ViewModel, ViewWithRef } from '@yoskutik/react-vvm';
+import { childView, configure, view, ViewModel, ViewWithRef } from '@yoskutik/react-vvm';
 import { act, render, screen } from '@testing-library/react';
 import { configure as configureMobx, makeObservable, observable } from 'mobx';
 
@@ -7,7 +7,7 @@ configureMobx({
   enforceActions: 'never',
 });
 
-describe('Common use of View and ViewChild', () => {
+describe('Common use of View and ChildView', () => {
   let vm: SomeViewModel;
 
   configure({
@@ -111,31 +111,31 @@ describe('Common use of View and ViewChild', () => {
     });
   });
 
-  describe('ViewChild', () => {
+  describe('ChildView', () => {
     describe('Observation', () => {
       test('Is observer', () => {
-        const ViewChild = viewChild<SomeViewModel>()(({ viewModel }) => (
+        const ChildView = childView<SomeViewModel>()(({ viewModel }) => (
           <span>{viewModel.n}</span>
         ));
 
-        const View = view(SomeViewModel)(() => <ViewChild/>);
+        const View = view(SomeViewModel)(() => <ChildView/>);
 
         testComponentObservability(View, true);
       });
 
       test('Is not observer', () => {
-        const ViewChild = viewChild<SomeViewModel>()(({ viewModel }) => (
+        const ChildView = childView<SomeViewModel>()(({ viewModel }) => (
           <div>{viewModel.n}</div>
         ), { observer: false });
 
-        const View = view(SomeViewModel)(() => <ViewChild/>);
+        const View = view(SomeViewModel)(() => <ChildView/>);
 
         testComponentObservability(View, false);
       });
     });
 
     test('Memo\'s propsAreEqual', () => {
-      const ViewChild: FC<PropsEqualityViewProps> = viewChild<SomeViewModel>()(({ a, b }) => {
+      const ChildView: FC<PropsEqualityViewProps> = childView<SomeViewModel>()(({ a, b }) => {
         const renderCount = useRef(0);
         renderCount.current++;
 
@@ -148,14 +148,14 @@ describe('Common use of View and ViewChild', () => {
       }, { propsAreEqual });
 
       const View: FC<PropsEqualityViewProps> = view(SomeViewModel)(({ a, b }) => (
-        <ViewChild a={a} b={b}/>
+        <ChildView a={a} b={b}/>
       ));
 
       testPropsEqualityMechanism(View);
     });
 
     test('ForwardRef', () => {
-      const ViewChild: ViewWithRef<HTMLDivElement> = viewChild<SomeViewModel>()(
+      const ChildView: ViewWithRef<HTMLDivElement> = childView<SomeViewModel>()(
         forwardRef((_, ref) => (
           <div ref={ref}>
             Component
@@ -165,7 +165,7 @@ describe('Common use of View and ViewChild', () => {
 
       const View: ViewWithRef<HTMLDivElement> = view(SomeViewModel)(
         forwardRef((_, ref) => (
-          <ViewChild ref={ref}/>
+          <ChildView ref={ref}/>
         )),
       );
 

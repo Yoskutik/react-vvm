@@ -4,9 +4,8 @@
 ![ES5](https://img.shields.io/badge/EcmaScript-v.5-blue)
 [![Version](https://img.shields.io/npm/v/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 [![license](https://img.shields.io/npm/l/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
-[![Vulnerabilities](https://img.shields.io/lgtm/alerts/github/Yoskutik/react-vvm?label=Vulnerabilities)](https://github.com/Yoskutik/react-vvm)
-![Jest coverage](./badges/coverage-jest%20coverage.svg)
-[![codecov](https://codecov.io/gh/Yoskutik/react-vvm/branch/master/graph/badge.svg?token=05X4P8AVXD)](https://codecov.io/gh/Yoskutik/react-vvm)
+[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/@yoskutik/react-vvm?label=Vulnerabilities)](https://www.npmjs.com/package/@yoskutik/react-vvm)
+![Jest coverage](https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/coverage-jest%20coverage.svg)
 [![Tests](https://github.com/Yoskutik/react-vvm/actions/workflows/tests.yml/badge.svg)](https://github.com/Yoskutik/react-vvm/actions/workflows/tests.yml)
 
 React VVM is a library which simplifies the usage of MobX with React by applying MVVM pattern. With this
@@ -32,7 +31,7 @@ By default, every view is an observer. But you can configure it.
 > One of the issues that solves this package is the purity of the code. The fewer props your components
 > have, the easier it will be to understand your code for others. And with this package you can minimize
 > amount of props passed by observing view model's fields, its parent's fields and so on. For example, a
-> ViewChild can observe its View props.
+> ChildView can observe its View props.
 
 **Every view is memoized**. And as it states below, the fewer props your view having, the faster your
 application will work. Since the view uses `memo` function, you can also pass the `propsAreEqual`
@@ -74,23 +73,23 @@ export const SomeView: FC<SomeViewProps> = view(SomeViewModel)(({ viewModel, pro
 ```
 
 
-### ViewChild
+### ChildView
 
-As the view, the viewChild function creates an object that also implements the view logic from the
-MVVM pattern. But there's a big difference in these functions - ViewChild does not call vmFactory
+As the view, the childView function creates an object that also implements the view logic from the
+MVVM pattern. But there's a big difference in these functions - ChildView does not call vmFactory
 and uses a view's view model as own one.
 
 By default, every view is an observer and is memoized. And you can change it. The options of
-creating view child is same as creating view.
+creating child view is same as creating view.
 
 ### Usage
 
 ```
-viewChild()(Component[, options])
+childView()(Component[, options])
 ```
 
-See using ViewChild:
-[Example](https://yoskutik.github.io/react-vvm#/examples?heading=basic.view.viewChild).
+See using ChildView:
+[Example](https://yoskutik.github.io/react-vvm#/examples?heading=basic.view.childView).
 
 #### Options
 
@@ -101,7 +100,7 @@ See setting options:
 
 ```typescript jsx
 import React, { FC } from 'react';
-import { viewChild } from '@yoskutik/react-vvm';
+import { childView } from '@yoskutik/react-vvm';
 import type { SomeViewModel } from './path-to-view-model';
 
 export type SomeViewChildProps = {
@@ -109,7 +108,7 @@ export type SomeViewChildProps = {
   prop2?: string;
 };
 
-export const SomeViewChild: FC<SomeViewChildProps> = viewChild<SomeViewModel>()(({ viewModel, prop1, prop2 }) => (
+export const SomeViewChild: FC<SomeViewChildProps> = childView<SomeViewModel>()(({ viewModel, prop1, prop2 }) => (
   <div>
     {viewModel.field1}
     {prop1}
@@ -248,7 +247,7 @@ See configuring vmFactory:
 
 `Wrapper`
 
-A wrapper which is used in `view` and `viewChild`. By default, `Wrapper` is equal to `React.Fragment`.
+A wrapper which is used in `view` and `childView`. By default, `Wrapper` is equal to `React.Fragment`.
 The wrapper is useful if you want to add an ErrorBoundary or for a debugging purposes.
 
 See configuring the wrapper:

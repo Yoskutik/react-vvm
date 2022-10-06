@@ -72,9 +72,9 @@ describe('Common use of ViewModel', () => {
   test('Parent equality', () => {
     class ChildViewModel extends ViewModel<SomeViewModel> {}
 
-    const ViewChild = view(ChildViewModel)(() => <div />);
+    const ChildView = view(ChildViewModel)(() => <div />);
 
-    const SomeView = view(SomeViewModel)(() => <ViewChild />);
+    const SomeView = view(SomeViewModel)(() => <ChildView />);
 
     render(<SomeView />);
 

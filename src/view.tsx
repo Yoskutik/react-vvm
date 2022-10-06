@@ -105,10 +105,10 @@ export const view = <R extends ViewModel>(VM: Constructable<R>) => (
 );
 
 /**
- * HOC-function to create an instance of ViewChild. ViewChild doesn't affect on the ViewModel.
+ * HOC-function to create an instance of ChildView. ChildView doesn't affect on the ViewModel.
  * ChildViews are memoized {@see memo}.
  */
-export const viewChild = <R extends ViewModel>() => (
+export const childView = <R extends ViewModel>() => (
   <T extends unknown = unknown, Rf extends unknown = unknown>(
     ChildViewComponent: BaseComponent<T, R, Rf>,
     options?: TViewOptions<T>,

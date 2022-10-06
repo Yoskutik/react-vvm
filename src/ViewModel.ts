@@ -31,7 +31,8 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
   readonly parent: T = undefined;
 
   constructor() {
-    makeObservable(this);
+    // MobX 4 and MobX5 don't have makeObservable
+    makeObservable && makeObservable(this);
   }
 
   private unmount() {

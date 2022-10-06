@@ -1,7 +1,8 @@
 /.idea
 /.github
-/node_modules
+/badges
 /coverage
+/node_modules
 /src
 /tests
 /.gitignore

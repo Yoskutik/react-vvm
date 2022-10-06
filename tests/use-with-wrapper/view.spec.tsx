@@ -1,5 +1,5 @@
 import { ReactNode, Component, FC } from 'react';
-import { viewChild, configure, view, ViewModel } from '@yoskutik/react-vvm';
+import { childView, configure, view, ViewModel } from '@yoskutik/react-vvm';
 import { render, screen } from '@testing-library/react';
 
 describe('Using View with Wrapper', () => {
@@ -43,17 +43,17 @@ describe('Using View with Wrapper', () => {
       expect(errorHandler).toBeCalled();
     });
 
-    test('ViewChild', () => {
+    test('ChildView', () => {
       errorHandler = jest.fn();
 
-      const ViewChild = viewChild()(() => {
+      const ChildView = childView()(() => {
         throw new Error();
       });
 
       const View = view(SomeViewModel)(() => (
         <div>
           <span>Some content</span>
-          <ViewChild />
+          <ChildView />
         </div>
       ));
 
