@@ -1,6 +1,6 @@
 {
   "name": "@yoskutik/react-vvm",
-  "version": "0.1.14",
+  "version": "0.1.16",
   "description": "An MVVM implementation for React using MobX",
   "keywords": [
     "typescript",
@@ -18,9 +18,9 @@
     "lint": "eslint ./src --ext .ts,.tsx --quiet"
   },
   "peerDependencies": {
-    "mobx": "^6",
-    "mobx-react": "^7",
-    "react": "^16.8 || ^17 || ^18"
+    "mobx": "^6 || ^5",
+    "mobx-react": "^7 || ^6",
+    "react": "^16 || ^17 || ^18"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.19.3",
