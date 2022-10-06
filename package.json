@@ -15,7 +15,7 @@
   "scripts": {
     "build": "rimraf dist && rollup -c rollup.config.js",
     "pub": "yarn build && jest && yarn publish --access public",
-    "lint": "eslint ./src --ext .ts,.tsx"
+    "lint": "eslint ./src --ext .ts,.tsx --quiet"
   },
   "peerDependencies": {
     "mobx": "^6",

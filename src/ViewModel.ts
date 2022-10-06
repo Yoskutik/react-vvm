@@ -1,3 +1,4 @@
+/* eslint-disable prefer-rest-params,@typescript-eslint/no-unused-vars */
 import { autorun, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 
 type TDisposer = () => void;

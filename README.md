@@ -5,6 +5,7 @@
 [![Version](https://img.shields.io/npm/v/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 [![license](https://img.shields.io/npm/l/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 [![Vulnerabilities](https://img.shields.io/lgtm/alerts/github/Yoskutik/react-vvm?label=Vulnerabilities)](https://github.com/Yoskutik/react-vvm)
+![Jest coverage](./badges/coverage-jest%20coverage.svg)
 [![codecov](https://codecov.io/gh/Yoskutik/react-vvm/branch/master/graph/badge.svg?token=05X4P8AVXD)](https://codecov.io/gh/Yoskutik/react-vvm)
 [![Tests](https://github.com/Yoskutik/react-vvm/actions/workflows/tests.yml/badge.svg)](https://github.com/Yoskutik/react-vvm/actions/workflows/tests.yml)
 

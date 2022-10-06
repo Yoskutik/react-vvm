@@ -28,6 +28,7 @@ const createComponent = (component, isObserver, viewModel, props, ref) => (
       ViewModelContext.Provider,
       { value: viewModel },
       createElement(
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useValue(() => (isObserver === false ? component : observer(component))),
         Object.assign({}, props, { viewModel, ref }),
       ),
