@@ -1,6 +1,6 @@
 {
   "name": "@yoskutik/react-vvm",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "An MVVM implementation for React using MobX",
   "keywords": [
     "typescript",
