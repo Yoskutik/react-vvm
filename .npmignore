@@ -1,0 +1,13 @@
+/.idea
+/.github
+/node_modules
+/coverage
+/src
+/tests
+/.gitignore
+/.babelrc
+/jest.config.js
+/metadata.d.ts
+/rollup.config.js
+/tsconfig.json
+/tsconfig.spec.json
