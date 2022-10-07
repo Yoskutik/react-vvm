@@ -1021,7 +1021,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.18.6"
     "@babel/helper-plugin-utils" "^7.18.6"
 
-"@babel/preset-env@^7.19.3":
+"@babel/preset-env@7.19.3":
   version "7.19.3"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.19.3.tgz#52cd19abaecb3f176a4ff9cc5e15b7bf06bec754"
   integrity sha512-ziye1OTc9dGFOAXSWKUqQblYHNlBOaDl8wzqf2iKXJAltYiR3hKHUKmkt+S9PppW7RQpq4fFCrwwpIDj/f5P4w==
@@ -1786,13 +1786,6 @@
   version "18.0.5"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.0.5.tgz#330b2d472c22f796e5531446939eacef8378444a"
   integrity sha512-OWPWTUrY/NIrjsAPkAk1wW9LZeIjSvkXRhclsFO8CZcZGCOg2G0YZy4ft+rOyYxy8B7ui5iZzi9OkDebZ7/QSA==
-  dependencies:
-    "@types/react" "*"
-
-"@types/react-is@^17.0.3":
-  version "17.0.3"
-  resolved "https://registry.yarnpkg.com/@types/react-is/-/react-is-17.0.3.tgz#2d855ba575f2fc8d17ef9861f084acc4b90a137a"
-  integrity sha512-aBTIWg1emtu95bLTLx0cpkxwGW3ueZv71nE2YFBpL8k/z5czEW8yYpOo8Dp+UUAFAtKwNaOsh/ioSeQnWlZcfw==
   dependencies:
     "@types/react" "*"
 
@@ -3601,7 +3594,7 @@ istanbul-reports@^3.1.3:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-jest-babel@^1.0.1:
+jest-babel@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/jest-babel/-/jest-babel-1.0.1.tgz#ef659df0e9397b083c0f6aebd4cb8cfaa77df8bf"
   integrity sha512-hZp74w14Rbv9zqkyrVEUBiGpjE3DvG8qmMDI5qblVhDe5TCjDzJYOHGUcousz+tJrTtHB1im29xS3cZUyhLnAg==
@@ -4697,11 +4690,6 @@ react-dom@18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-"react-is@^16 || ^17 || ^18", react-is@^18.0.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
-  integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
-
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -4711,6 +4699,11 @@ react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-is@^18.0.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
+  integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
 react@18.2.0:
   version "18.2.0"
@@ -5249,11 +5242,6 @@ tsconfig-paths@^3.14.1:
     json5 "^1.0.1"
     minimist "^1.2.6"
     strip-bom "^3.0.0"
-
-tslib@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
-  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
 tslib@^1.8.1, tslib@^1.9.3:
   version "1.14.1"
