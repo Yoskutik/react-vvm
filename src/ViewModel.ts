@@ -1,5 +1,5 @@
-/* eslint-disable prefer-rest-params,@typescript-eslint/no-unused-vars */
-import { autorun, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+/* eslint-disable prefer-rest-params,@typescript-eslint/no-unused-vars,prefer-spread */
+import { autorun, makeObservable, observable, reaction } from 'mobx';
 
 type TDisposer = () => void;
 
@@ -41,11 +41,7 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
    *
    * @link {@see reaction}
    */
-  protected reaction(...args: Parameters<typeof reaction>): IReactionDisposer {
-    const disposer = reaction.apply(this, arguments);
-    this.d.push(disposer);
-    return disposer;
-  }
+  protected reaction: typeof reaction;
 
   /**
    * Add-on function for MobX's autorun. The disposer of the autorun will be automatically called after the view
@@ -53,11 +49,7 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
    *
    * @link {@see autorun}
    */
-  protected autorun(...args: Parameters<typeof autorun>): IReactionDisposer {
-    const disposer = autorun.apply(this, arguments);
-    this.d.push(disposer);
-    return disposer;
-  }
+  protected autorun: typeof autorun;
 
   /** A function for adding a disposer, that will be automatically called after the view becomes unmounted */
   protected addDisposer(disposer: TDisposer) {
@@ -89,9 +81,37 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
   protected onViewUnmountedSync?(): void | Promise<void>;
 }
 
+// You may think that all the code below is a crutch. But it's actually not. All these lines are needed for
+// optimisations.
+//
+// For example, you may ask why do reaction and autorun declared in this way. Well, these functions are add-on function,
+// which means they should have the same type as their alternatives from MobX. And it's actually a problem. Reaction
+// have generics and the number of generics is not constant in different versions of MobX. So, the only way to type
+// it as typeof reaction. In this case I could declare these functions as class members, but in this way all view models
+// will create these functions during initialization. Which is not much, but will affect memory consumption. Therefore,
+// I decided to declare the typing of these functions as a member of the class, but really declare it in the prototype
+// of the class. In this case, only one function will be created.
+//
+// And why don't I use decorators instead of using Reflect? Because in this case there'll be a lot of code generated
+// in the main file. Using decorators instead of Reflect brings extra 500 characters which is 25% of the whole package.
+
+const prototype = ViewModel.prototype as any;
+
+prototype.reaction = function () {
+  const disposer = reaction.apply(undefined, arguments);
+  this.d.push(disposer);
+  return disposer;
+};
+
+prototype.autorun = function () {
+  const disposer = autorun.apply(undefined, arguments);
+  this.d.push(disposer);
+  return disposer;
+};
+
 ['viewProps', 'parent'].forEach(field => {
   (Reflect as any).decorate([
     observable.ref,
     (Reflect as any).metadata('design:type', Object),
-  ], ViewModel.prototype, field, undefined);
+  ], prototype, field, undefined);
 });
