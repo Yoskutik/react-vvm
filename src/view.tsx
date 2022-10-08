@@ -1,6 +1,6 @@
 import {
   createContext, memo, PropsWithChildren, useContext, useState, FC, createElement, useLayoutEffect, useRef, forwardRef,
-  RefAttributes, ForwardedRef, ReactElement,
+  RefAttributes, ForwardedRef, ReactElement, useEffect,
 } from 'react';
 import { observer } from 'mobx-react';
 import { runInAction } from 'mobx';
@@ -84,19 +84,35 @@ export const view = <R extends ViewModel>(VM: Constructable<R>) => (
   ): FC<T> => (
     create(ViewComponent, props => {
       const viewModel = useValue(() => configuration.vmFactory(VM)) as any;
+      const hasBeenRenderedSync = useRef(false);
       const hasBeenRendered = useRef(false);
       const parent = useContext(ViewModelContext);
 
+      useEffect(() => {
+        hasBeenRendered.current && viewModel.onViewUpdated && viewModel.onViewUpdated();
+      });
+
       useLayoutEffect(() => runInAction(() => {
-        hasBeenRendered.current && viewModel.onViewUpdated && viewModel.onViewUpdated(props);
+        hasBeenRenderedSync.current && viewModel.onViewUpdatedSync && viewModel.onViewUpdatedSync(props);
         viewModel.parent = parent;
         viewModel.viewProps = props;
       }));
 
-      useLayoutEffect(() => {
+      useEffect(() => {
         viewModel.onViewMounted && viewModel.onViewMounted();
         hasBeenRendered.current = true;
-        return () => viewModel.unmount();
+
+        return () => {
+          viewModel.d.forEach(it => it());
+          viewModel.d = [];
+          viewModel.onViewUnmounted && viewModel.onViewUnmounted();
+        };
+      }, []);
+
+      useLayoutEffect(() => {
+        viewModel.onViewMountedSync && viewModel.onViewMountedSync();
+        hasBeenRenderedSync.current = true;
+        return () => viewModel.onViewUnmountedSync && viewModel.onViewUnmountedSync();
       }, []);
 
       return viewModel;

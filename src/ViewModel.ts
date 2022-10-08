@@ -35,12 +35,6 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
     makeObservable && makeObservable(this);
   }
 
-  private unmount() {
-    this.d.forEach(it => it());
-    this.d = [];
-    this.onViewUnmounted && this.onViewUnmounted();
-  }
-
   /**
    * Add-on function for MobX's reaction. The disposer of the reaction will be automatically called after the view
    * becomes unmounted.
@@ -70,17 +64,29 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
     this.d.push(disposer);
   }
 
-  /** A function that is called after the View has become mounted */
+  /** A function that is called after the View has become mounted. Calls in the useEffect hook */
   protected onViewMounted?(): void | Promise<void>;
 
+  /** A function that is called after the View has become mounted. Calls in the useLayoutEffect hooks */
+  protected onViewMountedSync?(): void | Promise<void>;
+
   /**
-   * A function that is called after the View has been rendered
+   * A function that is called after the View has been rendered. Calls in the useEffect hook. It doesn't have props
+   * argument, because by the time onViewUpdated is calling, viewProps are already updated.
+   */
+  protected onViewUpdated?(): void | Promise<void>;
+
+  /**
+   * A function that is called after the View has been rendered. Calls in the useLayoutEffect hook
    * @param newProps - View's properties which will be applied after updated. They're not equal to this.viewProps
    */
-  protected onViewUpdated?(newProps?: R): void | Promise<void>;
+  protected onViewUpdatedSync?(newProps?: R): void | Promise<void>;
 
-  /** A function that is called after the View has become unmounted */
+  /** A function that is called after the View has become unmounted. Calls in the useEffect hook */
   protected onViewUnmounted?(): void | Promise<void>;
+
+  /** A function that is called after the View has become unmounted. Calls in the useLayoutEffect hook */
+  protected onViewUnmountedSync?(): void | Promise<void>;
 }
 
 ['viewProps', 'parent'].forEach(field => {

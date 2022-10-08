@@ -1,6 +1,6 @@
 # React MVVM Framework
 
-![Weight](https://img.shields.io/badge/Weight-1.84%20Kb-green)
+![Weight](https://img.shields.io/badge/Weight-2%20Kb-green)
 ![ES5](https://img.shields.io/badge/EcmaScript-v.5-blue)
 [![Version](https://img.shields.io/npm/v/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 [![license](https://img.shields.io/npm/l/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
@@ -161,15 +161,29 @@ See typing, using and observing `viewProps`:
 
 `protected onViewMounted?()`
 
+A hook which is called after the view becomes mounted. The function is called in the `useEffect` hook.
+
+`protected onViewMountedSync?()`
+
 A hook which is called after the view becomes mounted. The function is called in the `useLayoutEffect`
 hook.
 
 `protected onViewUnmounted?()`
 
 A hook which is called after the view becomes unmounted. The function is called in the
+`useEffect` hook.
+
+`protected onViewUnmountedSync?()`
+
+A hook which is called after the view becomes unmounted. The function is called in the
 `useLayoutEffect` hook.
 
-`protected onViewUpdated?(newProps?)`
+`protected onViewUpdated?()`
+
+A hook which is called after the view is rendered besides the first one. This function is also called
+in the `useEffect` hook.
+
+`protected onViewUpdatedSync?(newProps?)`
 
 A hook which is called after the view is rendered besides the first one. In this function you can
 get new props the view has been rendered with before these props are applied to a `viewProps`. This

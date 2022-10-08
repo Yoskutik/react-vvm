@@ -16,9 +16,15 @@ describe('Common use of ViewModel', () => {
   class SomeViewModel extends ViewModel<unknown, ViewProps> {
     onViewUnmounted = jest.fn();
 
+    onViewUnmountedSync = jest.fn();
+
     onViewMounted = jest.fn();
 
+    onViewMountedSync = jest.fn();
+
     onViewUpdated = jest.fn();
+
+    onViewUpdatedSync = jest.fn();
   }
 
   const View: FC<ViewProps> = view(SomeViewModel)(({ prop1 }) => (
@@ -28,8 +34,11 @@ describe('Common use of ViewModel', () => {
   describe('View lifecycle', () => {
     const checkHooks = (a: number, b: number, c: number) => {
       expect(viewModel.onViewMounted).toBeCalledTimes(a);
+      expect(viewModel.onViewMountedSync).toBeCalledTimes(a);
       expect(viewModel.onViewUpdated).toBeCalledTimes(b);
+      expect(viewModel.onViewUpdatedSync).toBeCalledTimes(b);
       expect(viewModel.onViewUnmounted).toBeCalledTimes(c);
+      expect(viewModel.onViewUnmountedSync).toBeCalledTimes(c);
     };
 
     const { rerender } = render(<View prop1={0} />);
