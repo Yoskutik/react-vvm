@@ -1,6 +1,6 @@
 # React MVVM Framework
 
-![Weight](https://img.shields.io/badge/Weight-2%20Kb-green)
+![Weight](https://img.shields.io/badge/Weight-1.9%20Kb-green)
 ![ES5](https://img.shields.io/badge/EcmaScript-v.5-blue)
 [![Version](https://img.shields.io/npm/v/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 [![license](https://img.shields.io/npm/l/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
