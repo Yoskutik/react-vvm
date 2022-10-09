@@ -36,7 +36,11 @@ const createComponent = (component: FC, isObserver: boolean, viewModel: ViewMode
   )
 );
 
-const create = (component, vmFactory: (props?) => ViewModel, options: TViewOptions<any> = {}) => {
+const createComponentWithHOCs = (
+  component: FC & { $$typeof?: symbol },
+  vmFactory: (props?) => ViewModel,
+  options: TViewOptions<any> = {},
+) => {
   const isForwardRef = component.$$typeof === Symbol.for('react.forward_ref');
 
   let hoc = (props, ref) => (
@@ -56,6 +60,32 @@ type TViewOptions<T> = {
 };
 
 type BaseComponent<P, V, R> = (props: P & { viewModel: V }, ref: ForwardedRef<R>) => ReactElement | null;
+
+const onViewMounted = 'onViewMounted';
+const onViewMountedSync = 'onViewMountedSync';
+const onViewUnmounted = 'onViewUnmounted';
+const onViewUnmountedSync = 'onViewUnmountedSync';
+const onViewUpdated = 'onViewUpdated';
+const onViewUpdatedSync = 'onViewUpdatedSync';
+
+const useLifeCycle = (hook, viewModel, onUpdated, onMounted, onUnmounted, updateCb, props, unmountCb?) => {
+  const wasRendered = useRef(false);
+
+  hook(() => {
+    wasRendered.current && viewModel[onUpdated] && viewModel[onUpdated](props);
+    updateCb && updateCb();
+  });
+
+  hook(() => {
+    viewModel[onMounted] && viewModel[onMounted]();
+    wasRendered.current = true;
+
+    return () => {
+      unmountCb && unmountCb();
+      viewModel[onUnmounted] && viewModel[onUnmounted]();
+    };
+  }, []);
+};
 
 /**
  * HOC-function to create an instance of View.
@@ -82,38 +112,22 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
     ViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (
-    create(ViewComponent, props => {
+    createComponentWithHOCs(ViewComponent, props => {
       const viewModel = useValue(() => configuration.vmFactory(VM)) as any;
-      const hasBeenRenderedSync = useRef(false);
-      const hasBeenRendered = useRef(false);
       const parent = useContext(ViewModelContext);
 
-      useEffect(() => {
-        hasBeenRendered.current && viewModel.onViewUpdated && viewModel.onViewUpdated();
+      useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, undefined, undefined, () => {
+        viewModel.d = viewModel.d.filter(it => {
+          it();
+        });
       });
 
-      useLayoutEffect(() => runInAction(() => {
-        hasBeenRenderedSync.current && viewModel.onViewUpdatedSync && viewModel.onViewUpdatedSync(props);
-        viewModel.parent = parent;
-        viewModel.viewProps = props;
-      }));
-
-      useEffect(() => {
-        viewModel.onViewMounted && viewModel.onViewMounted();
-        hasBeenRendered.current = true;
-
-        return () => {
-          viewModel.d.forEach(it => it());
-          viewModel.d = [];
-          viewModel.onViewUnmounted && viewModel.onViewUnmounted();
-        };
-      }, []);
-
-      useLayoutEffect(() => {
-        viewModel.onViewMountedSync && viewModel.onViewMountedSync();
-        hasBeenRenderedSync.current = true;
-        return () => viewModel.onViewUnmountedSync && viewModel.onViewUnmountedSync();
-      }, []);
+      useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, () => {
+        runInAction(() => {
+          viewModel.parent = parent;
+          viewModel.viewProps = props;
+        });
+      }, props);
 
       return viewModel;
     }, options)
@@ -129,7 +143,7 @@ export const childView = <V extends ViewModel>() => (
     ChildViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (
-    create(ChildViewComponent, () => useContext(ViewModelContext), options)
+    createComponentWithHOCs(ChildViewComponent, () => useContext(ViewModelContext), options)
   )
 );
 

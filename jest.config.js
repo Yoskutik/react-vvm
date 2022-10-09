@@ -4,9 +4,6 @@ module.exports = {
     moduleNameMapper: {
         '@yoskutik/react-vvm': '<rootDir>/src',
     },
-    transform: {
-        '^.+\\.(js|jsx)?$': 'babel-jest'
-    },
     setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
     coverageReporters: ['json-summary'],
 };

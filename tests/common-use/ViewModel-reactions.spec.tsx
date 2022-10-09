@@ -91,5 +91,7 @@ describe('Common use of ViewModel with reactions', () => {
     cleanup();
     checkCalls(2, 3);
     checkCalls(2, 4);
+
+    expect((viewModel as any).d).toHaveLength(0);
   });
 });

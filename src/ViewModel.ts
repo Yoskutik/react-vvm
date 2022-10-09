@@ -4,12 +4,12 @@ import { autorun, makeObservable, observable, reaction } from 'mobx';
 type TDisposer = () => void;
 
 /** An abstract class for ViewModels */
-export abstract class ViewModel<T extends ViewModel | unknown = unknown, R extends Record<string, any> = unknown> {
+export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unknown> {
   /** An array of disposers which are called after the view becomes unmounted */
   private d: TDisposer[] = [];
 
   /** Properties that were given to a View. This object is updated every time the View renders with the new props */
-  readonly viewProps: Readonly<R> = undefined;
+  readonly viewProps: Readonly<P> = undefined;
 
   /**
    * A ViewModel instance which is defined for the View which is the parent of the View of this ViewModel in the
@@ -28,7 +28,7 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
    *
    * In this case an instance of ViewModel1 must be a parent for the instance of ViewModel2.
    */
-  readonly parent: T = undefined;
+  readonly parent: V = undefined;
 
   constructor() {
     // MobX 4 and MobX5 don't have makeObservable
@@ -52,45 +52,45 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
   protected autorun: typeof autorun;
 
   /** A function for adding a disposer, that will be automatically called after the view becomes unmounted */
-  protected addDisposer(disposer: TDisposer) {
+  protected addDisposer(disposer: TDisposer): void {
     this.d.push(disposer);
   }
 
   /** A function that is called after the View has become mounted. Calls in the useEffect hook */
-  protected onViewMounted?(): void | Promise<void>;
+  protected onViewMounted?(): void;
 
   /** A function that is called after the View has become mounted. Calls in the useLayoutEffect hooks */
-  protected onViewMountedSync?(): void | Promise<void>;
+  protected onViewMountedSync?(): void;
 
   /**
    * A function that is called after the View has been rendered. Calls in the useEffect hook. It doesn't have props
    * argument, because by the time onViewUpdated is calling, viewProps are already updated.
    */
-  protected onViewUpdated?(): void | Promise<void>;
+  protected onViewUpdated?(): void;
 
   /**
    * A function that is called after the View has been rendered. Calls in the useLayoutEffect hook
    * @param newProps - View's properties which will be applied after updated. They're not equal to this.viewProps
    */
-  protected onViewUpdatedSync?(newProps?: R): void | Promise<void>;
+  protected onViewUpdatedSync?(newProps?: P): void;
 
   /** A function that is called after the View has become unmounted. Calls in the useEffect hook */
-  protected onViewUnmounted?(): void | Promise<void>;
+  protected onViewUnmounted?(): void;
 
   /** A function that is called after the View has become unmounted. Calls in the useLayoutEffect hook */
-  protected onViewUnmountedSync?(): void | Promise<void>;
+  protected onViewUnmountedSync?(): void;
 }
 
 // You may think that all the code below is a crutch. But it's actually not. All these lines are needed for
 // optimisations.
 //
-// For example, you may ask why do reaction and autorun declared in this way. Well, these functions are add-on function,
-// which means they should have the same type as their alternatives from MobX. And it's actually a problem. Reaction
-// have generics and the number of generics is not constant in different versions of MobX. So, the only way to type
-// it as typeof reaction. In this case I could declare these functions as class members, but in this way all view models
-// will create these functions during initialization. Which is not much, but will affect memory consumption. Therefore,
-// I decided to declare the typing of these functions as a member of the class, but really declare it in the prototype
-// of the class. In this case, only one function will be created.
+// For example, you may ask why do reaction and autorun declared in this way. Well, these functions are add-on
+// functions, which means they should have the same type as their alternatives from MobX. And it's actually a problem.
+// Reaction has generics and the number of generics is not constant in different versions of MobX. So, the only way to
+// type it is using typeof reaction. In this case I could declare these functions as class members, but in this way all
+// view models start creating these functions during initialization. Which is not much, but will affect memory
+// consumption. Therefore, I decided to declare the typing of these functions as a member of the class, but really
+// declare it in the prototype of the class. In this case, only one function will be created for all view models.
 //
 // And why don't I use decorators instead of using Reflect? Because in this case there'll be a lot of code generated
 // in the main file. Using decorators instead of Reflect brings extra 500 characters which is 25% of the whole package.
@@ -98,15 +98,11 @@ export abstract class ViewModel<T extends ViewModel | unknown = unknown, R exten
 const prototype = ViewModel.prototype as any;
 
 prototype.reaction = function () {
-  const disposer = reaction.apply(undefined, arguments);
-  this.d.push(disposer);
-  return disposer;
+  return this.d[this.d.push(reaction.apply(null, arguments)) - 1];
 };
 
 prototype.autorun = function () {
-  const disposer = autorun.apply(undefined, arguments);
-  this.d.push(disposer);
-  return disposer;
+  return this.d[this.d.push(autorun.apply(null, arguments)) - 1];
 };
 
 ['viewProps', 'parent'].forEach(field => {
