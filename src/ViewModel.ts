@@ -62,17 +62,11 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
   /** A function that is called after the View has become mounted. Calls in the useLayoutEffect hooks */
   protected onViewMountedSync?(): void;
 
-  /**
-   * A function that is called after the View has been rendered. Calls in the useEffect hook. It doesn't have props
-   * argument, because by the time onViewUpdated is calling, viewProps are already updated.
-   */
+  /** A function that is called after the View has been rendered. Calls in the useEffect hook */
   protected onViewUpdated?(): void;
 
-  /**
-   * A function that is called after the View has been rendered. Calls in the useLayoutEffect hook
-   * @param newProps - View's properties which will be applied after updated. They're not equal to this.viewProps
-   */
-  protected onViewUpdatedSync?(newProps?: P): void;
+  /** A function that is called after the View has been rendered. Calls in the useLayoutEffect hook */
+  protected onViewUpdatedSync?(): void;
 
   /** A function that is called after the View has become unmounted. Calls in the useEffect hook */
   protected onViewUnmounted?(): void;

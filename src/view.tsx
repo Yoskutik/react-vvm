@@ -68,12 +68,12 @@ const onViewUnmountedSync = 'onViewUnmountedSync';
 const onViewUpdated = 'onViewUpdated';
 const onViewUpdatedSync = 'onViewUpdatedSync';
 
-const useLifeCycle = (hook, viewModel, onUpdated, onMounted, onUnmounted, updateCb, props, unmountCb?) => {
+const useLifeCycle = (hook, viewModel, onUpdated, onMounted, onUnmounted, updateCb, unmountCb?) => {
   const wasRendered = useRef(false);
 
   hook(() => {
-    wasRendered.current && viewModel[onUpdated] && viewModel[onUpdated](props);
     updateCb && updateCb();
+    wasRendered.current && viewModel[onUpdated] && viewModel[onUpdated]();
   });
 
   hook(() => {
@@ -116,7 +116,7 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
       const viewModel = useValue(() => configuration.vmFactory(VM)) as any;
       const parent = useContext(ViewModelContext);
 
-      useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, undefined, undefined, () => {
+      useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, null, () => {
         viewModel.d = viewModel.d.filter(it => {
           it();
         });
@@ -127,7 +127,7 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
           viewModel.parent = parent;
           viewModel.viewProps = props;
         });
-      }, props);
+      });
 
       return viewModel;
     }, options)

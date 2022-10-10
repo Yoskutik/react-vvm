@@ -55,7 +55,6 @@ describe('Common use of ViewModel', () => {
     test('View updates with changed props', () => {
       rerender(<View prop1={1} />);
       checkHooks(1, 1, 0);
-      expect(viewModel.onViewUpdatedSync).toBeCalledWith({ prop1: 1 });
     });
 
     test('View has been unmounted', () => {

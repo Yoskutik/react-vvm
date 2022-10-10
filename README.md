@@ -183,11 +183,10 @@ A hook which is called after the view becomes unmounted. The function is called 
 A hook which is called after the view is rendered besides the first one. This function is also called
 in the `useEffect` hook.
 
-`protected onViewUpdatedSync?(newProps?)`
+`protected onViewUpdatedSync?()`
 
-A hook which is called after the view is rendered besides the first one. In this function you can
-get new props the view has been rendered with before these props are applied to a `viewProps`. This
-function is also called in the `useLayoutEffect` hook.
+A hook which is called after the view is rendered besides the first one. This function is also called
+in the `useLayoutEffect` hook.
 
 See using view hooks:
 [Example](https://yoskutik.github.io/react-vvm#/examples?heading=basic.viewModel.hooks).
