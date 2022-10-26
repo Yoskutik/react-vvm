@@ -1,12 +1,14 @@
 import {
-  createContext, memo, useContext, useState, FC, createElement, useLayoutEffect, useRef, forwardRef, RefAttributes,
-  ForwardedRef, ReactElement, useEffect,
+  createContext, memo, useContext, useState, FC, createElement, useLayoutEffect, useRef, forwardRef,
+  ForwardedRef, ReactElement, useEffect, Component,
 } from 'react';
 import { observer } from 'mobx-react';
-import { runInAction } from 'mobx';
+import { action } from 'mobx';
 import { ViewModel } from './ViewModel';
 import { Constructable } from './types';
 import { configuration } from './configure';
+
+declare const isDev: boolean;
 
 const ViewModelContext = createContext<ViewModel>(null);
 
@@ -20,35 +22,36 @@ const ViewModelContext = createContext<ViewModel>(null);
  */
 const useValue = <T extends unknown>(state: () => T) => useState(state)[0];
 
-const createComponent = (component: FC, isObserver: boolean, viewModel: ViewModel, props, ref) => (
-  createElement(
-    configuration.Wrapper,
-    null,
-    createElement(
-      ViewModelContext.Provider,
-      { value: viewModel },
-      createElement(
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useValue(() => (isObserver === false ? component : observer(component))),
-        Object.assign({}, props, { viewModel, ref }),
-      ),
-    ),
-  )
-);
-
-const createComponentWithHOCs = (
+const createComponent = (
   component: FC & { $$typeof?: symbol },
   vmFactory: (props?) => ViewModel,
-  options: TViewOptions<any> = {},
+  options: TViewOptions<unknown> = {},
+  vmName?: string,
 ) => {
   const isForwardRef = component.$$typeof === Symbol.for('react.forward_ref');
 
-  let hoc = (props, ref) => (
-    createComponent(component, options.observer, vmFactory(props), props, isForwardRef ? ref : undefined)
-  );
+  let hoc: any = (props, ref) => {
+    const viewModel = vmFactory(props);
+
+    let element: any = createElement(
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useValue(() => (options.observer === false ? component : observer(component))),
+      Object.assign({}, props, { viewModel, ref: isForwardRef ? ref : undefined }),
+    );
+
+    if (vmName) {
+      element = createElement(ViewModelContext.Provider, { value: viewModel }, element);
+    }
+
+    return createElement(configuration.Wrapper, null, element);
+  };
 
   if (isForwardRef) {
     hoc = forwardRef(hoc);
+  }
+
+  if (isDev) {
+    hoc.displayName = `${!vmName ? 'Child' : ''}View${vmName ? `@${vmName}` : ''}`;
   }
 
   return memo(hoc, options.propsAreEqual);
@@ -59,16 +62,25 @@ type TViewOptions<T> = {
   propsAreEqual?: (prevProps: Readonly<T>, nextProps: Readonly<T>) => boolean;
 };
 
-type BaseComponent<P, V, R> = (props: P & { viewModel: V }, ref: ForwardedRef<R>) => ReactElement | null;
+type BaseComponent<P, V, R> = (props: P & { readonly viewModel: V }, ref: ForwardedRef<R>) => ReactElement | null;
 
 const onViewMounted = 'onViewMounted';
-const onViewMountedSync = 'onViewMountedSync';
-const onViewUnmounted = 'onViewUnmounted';
-const onViewUnmountedSync = 'onViewUnmountedSync';
 const onViewUpdated = 'onViewUpdated';
-const onViewUpdatedSync = 'onViewUpdatedSync';
+const onViewUnmounted = 'onViewUnmounted';
 
-const useLifeCycle = (hook, viewModel, onUpdated, onMounted, onUnmounted, updateCb, unmountCb?) => {
+const onViewMountedSync = 'onViewMountedSync';
+const onViewUpdatedSync = 'onViewUpdatedSync';
+const onViewUnmountedSync = 'onViewUnmountedSync';
+
+const useLifeCycle = (
+  hook: typeof useEffect,
+  viewModel: ViewModel,
+  onUpdated: string,
+  onMounted: string,
+  onUnmounted: string,
+  updateCb: () => void,
+  unmountCb?: () => void,
+) => {
   const wasRendered = useRef(false);
 
   hook(() => {
@@ -88,13 +100,8 @@ const useLifeCycle = (hook, viewModel, onUpdated, onMounted, onUnmounted, update
 };
 
 /**
- * HOC-function to create an instance of View.
- * The View:
- * * creates an instance of the ViewModel;
- * * pass for the created ViewModel its parent ViewModel;
- * * pass own props every time View updates.
- *
- * Views are memoized {@see memo}.
+ * HOC-function that creates an instance of View. The View creates an instance of the ViewModel; passes its parent;
+ * updates viewProps every time the View is re-rendered. Views are memoized with {@link React.memo}.
  * @param VM - ViewModel class.
  *
  * @example
@@ -112,7 +119,7 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
     ViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (
-    createComponentWithHOCs(ViewComponent, props => {
+    createComponent(ViewComponent, props => {
       const viewModel = useValue(() => configuration.vmFactory(VM)) as any;
       const parent = useContext(ViewModelContext);
 
@@ -122,29 +129,37 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
         });
       });
 
-      useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, () => {
-        runInAction(() => {
-          viewModel.parent = parent;
-          viewModel.viewProps = props;
-        });
-      });
+      useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, action(() => {
+        viewModel.parent = parent;
+        viewModel.viewProps = props;
+      }));
 
       return viewModel;
-    }, options)
+    }, options, VM.name)
   )
 );
 
 /**
- * HOC-function to create an instance of ChildView. ChildView doesn't affect on the ViewModel.
- * ChildViews are memoized {@see memo}.
+ * HOC-function that creates an instance of ChildView. ChildView doesn't create or affect on the ViewModel, it only
+ * uses one. ChildViews are memoized with {@link React.memo}.
  */
 export const childView = <V extends ViewModel>() => (
   <P extends unknown = unknown, R = unknown>(
     ChildViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (
-    createComponentWithHOCs(ChildViewComponent, () => useContext(ViewModelContext), options)
+    createComponent(ChildViewComponent, () => useContext(ViewModelContext), options)
   )
 );
 
-export type ViewWithRef<T, R = unknown> = FC<R & RefAttributes<T>>;
+/**
+ * A class with which you can create a ChildView. The context of this class is equals to a view model. And also
+ * there's a typed getter viewModel, which just an alias of the context field.
+ */
+export class ChildViewComponent<V, P = unknown, S = unknown> extends Component<P, S> {
+  static contextType = ViewModelContext;
+
+  get viewModel(): V {
+    return this.context as V;
+  }
+}

@@ -1,4 +1,4 @@
-name: Collecting Jest coverage
+name: Build
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,13 +16,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+
+      - name: Dependancies installation
       - run: yarn install
+
+      - name: Building
+      - run: yarn build
+
+      - name: Linting
+      - run: yarn lint
+
+      - name: Running unit tests
       - run: yarn jest --coverage
+
+      - name: Generating the size badge
+      - run: node ../scripts/size-badge.js
+
       - name: Generating coverage badges
         uses: jpb06/jest-badges-action@latest
         with:

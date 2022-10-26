@@ -10,7 +10,7 @@
     "architecture",
     "lightweight"
   ],
-  "main": "dist/index.js",
+  "main": "index.js",
   "types": "dist/index.d.ts",
   "homepage": "https://github.com/Yoskutik/react-vvm",
   "bugs": {
@@ -27,8 +27,8 @@
     "lint": "eslint ./src --ext .ts,.tsx --quiet"
   },
   "peerDependencies": {
-    "mobx": "^6 || ^5",
-    "mobx-react": "^7 || ^6",
+    "mobx": "^4 || ^5 || ^6",
+    "mobx-react": "^6 || ^7",
     "react": "^16 || ^17 || ^18"
   },
   "devDependencies": {
@@ -49,6 +49,7 @@
     "reflect-metadata": "~0.1.13",
     "rimraf": "~3.0.2",
     "rollup": "~2.79.1",
+    "rollup-plugin-define": "^1.0.1",
     "rollup-plugin-terser": "~7.0.2",
     "ts-jest": "~29.0.3",
     "tsyringe": "~4.7.0",

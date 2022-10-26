@@ -1,32 +1,28 @@
-/* eslint-disable prefer-rest-params,@typescript-eslint/no-unused-vars,prefer-spread */
 import { autorun, makeObservable, observable, reaction } from 'mobx';
 
 type TDisposer = () => void;
 
-/** An abstract class for ViewModels */
+/** An abstract class for view models */
 export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unknown> {
   /** An array of disposers which are called after the view becomes unmounted */
   private d: TDisposer[] = [];
 
-  /** Properties that were given to a View. This object is updated every time the View renders with the new props */
+  /** Properties that were given to a view. This object is updated every time the view is rendered with the new props */
   readonly viewProps: Readonly<P> = undefined;
 
   /**
-   * A ViewModel instance which is defined for the View which is the parent of the View of this ViewModel in the
-   * virtual DOM.
+   * A view model instance which is defined in a view that contains the view of current view model.
    *
-   * For example. Let's imagine React Virtual DOM. View2 is located somewhere inside View1. It doesn't have to be
-   * a direct child.
    * @example
-   * +-------------------------------------------------+
-   * | View1 -> creates an instance of ViewModel1      |
-   * |                                                 |
-   * | +---------------------------------------------+ |
-   * | | View2 -> creates and instance of ViewModel2 | |
-   * | +---------------------------------------------+ |
-   * +-------------------------------------------------+
-   *
-   * In this case an instance of ViewModel1 must be a parent for the instance of ViewModel2.
+   * // View1 creates an instance of ViewModel1
+   * // View2 creates and instance of ViewModel2
+   * // In this case ViewModel1 is a parent of ViewModel2, because View2 is located somewhere inside View1
+   * <View1>
+   *   <div>
+   *     Other content
+   *     <View2 />
+   *   </div>
+   * </View1>
    */
   readonly parent: V = undefined;
 
@@ -38,16 +34,12 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
   /**
    * Add-on function for MobX's reaction. The disposer of the reaction will be automatically called after the view
    * becomes unmounted.
-   *
-   * @link {@see reaction}
    */
   protected reaction: typeof reaction;
 
   /**
    * Add-on function for MobX's autorun. The disposer of the autorun will be automatically called after the view
    * becomes unmounted.
-   *
-   * @link {@see autorun}
    */
   protected autorun: typeof autorun;
 
@@ -56,22 +48,22 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
     this.d.push(disposer);
   }
 
-  /** A function that is called after the View has become mounted. Calls in the useEffect hook */
+  /** A function that is called after the View has become mounted. Calls in the {@see React.useEffect} hook */
   protected onViewMounted?(): void;
 
-  /** A function that is called after the View has become mounted. Calls in the useLayoutEffect hooks */
-  protected onViewMountedSync?(): void;
-
-  /** A function that is called after the View has been rendered. Calls in the useEffect hook */
+  /** A function that is called after the View has been rendered. Calls in the {@see React.useEffect} hook */
   protected onViewUpdated?(): void;
 
-  /** A function that is called after the View has been rendered. Calls in the useLayoutEffect hook */
-  protected onViewUpdatedSync?(): void;
-
-  /** A function that is called after the View has become unmounted. Calls in the useEffect hook */
+  /** A function that is called after the View has become unmounted. Calls in the {@see React.useEffect} hook */
   protected onViewUnmounted?(): void;
 
-  /** A function that is called after the View has become unmounted. Calls in the useLayoutEffect hook */
+  /** A function that is called after the View has become mounted. Calls in the {@see React.useLayoutEffect} hook */
+  protected onViewMountedSync?(): void;
+
+  /** A function that is called after the View has been rendered. Calls in the {@see React.useLayoutEffect} hook */
+  protected onViewUpdatedSync?(): void;
+
+  /** A function that is called after the View has become unmounted. Calls in the {@see React.useLayoutEffect} hook */
   protected onViewUnmountedSync?(): void;
 }
 
@@ -87,21 +79,23 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
 // declare it in the prototype of the class. In this case, only one function will be created for all view models.
 //
 // And why don't I use decorators instead of using Reflect? Because in this case there'll be a lot of code generated
-// in the main file. Using decorators instead of Reflect brings extra 500 characters which is 25% of the whole package.
+// in the main file. Using decorators instead of Reflect brings extra 500 characters which is 33% of the whole package.
 
 const prototype = ViewModel.prototype as any;
 
-prototype.reaction = function () {
-  return this.d[this.d.push(reaction.apply(null, arguments)) - 1];
-};
-
-prototype.autorun = function () {
-  return this.d[this.d.push(autorun.apply(null, arguments)) - 1];
-};
+[
+  [autorun, 'autorun'] as const,
+  [reaction, 'reaction'] as const,
+].forEach(([f, name]) => {
+  prototype[name] = function () {
+    // eslint-disable-next-line prefer-rest-params
+    return this.d[this.d.push(f.apply(0, arguments)) - 1];
+  };
+});
 
 ['viewProps', 'parent'].forEach(field => {
   (Reflect as any).decorate([
     observable.ref,
     (Reflect as any).metadata('design:type', Object),
-  ], prototype, field, undefined);
+  ], prototype, field);
 });
