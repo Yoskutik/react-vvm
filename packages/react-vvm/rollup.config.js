@@ -23,11 +23,7 @@ export default [false, true].map(isDev => ({
         isDev: JSON.stringify(isDev),
       },
     }),
-    terser(!isDev ? undefined : {
-      keep_classnames: true,
-      keep_fnames: true,
-      ecma: 2015,
-    }),
+    ...(isDev ? [] : [terser()])
   ],
   external: [
     'react',

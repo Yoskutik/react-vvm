@@ -73,7 +73,7 @@ export const SomeView: FC<SomeViewProps> = view(SomeViewModel)(({ viewModel, pro
 ```
 
 
-### ChildView
+## ChildView
 
 As the view, the childView function creates an object that also implements the view logic from the
 MVVM pattern. But there's a big difference in these functions - ChildView does not call vmFactory
@@ -115,6 +115,40 @@ export const SomeViewChild: FC<SomeViewChildProps> = childView<SomeViewModel>()(
     {prop2}
   </div>
 ));
+```
+
+## ChildViewComponent
+
+We highly recommend use to use React VVM with functional style components. But to increase
+compatibility, we added a class `ChildViewComponent`, so you can create an instances of ChildView
+as class components.
+
+> If you want to create an instance of View as class component, please, see the
+> [example](https://yoskutik.github.io/react-vvm/#/examples?heading=basic.view.classComponents).
+
+The only difference between class-style ChildView and functional-style ChildView is that in the
+class-style viewModel field is part of class, while in the function-style it's a property.
+
+### Usage sample
+
+```typescript jsx
+import React from 'react';
+import { ChildViewComponent } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './path-to-view-model';
+
+export type Props = {
+  prop1: number;
+  prop2?: string;
+};
+
+class SomeChildView extends ChildViewComponent<SomeViewModel, Props> {
+  render() {
+    return (
+      // viewModel is a class member, not a property of the component
+      <div>{this.viewModel.field1}</div>
+    );
+  }
+}
 ```
 
 ## ViewModel

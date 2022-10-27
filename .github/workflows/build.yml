@@ -26,7 +26,7 @@ jobs:
       - name: Install
         run: yarn install
 
-      - name: Build all 🔧
+      - name: Build 🔧
         run: yarn build
 
       - name: Deploy documentation 🚀
@@ -35,10 +35,10 @@ jobs:
           folder: packages/docs/build
 
       - name: Linting
-        run: yarn --cwd packages/react-vvm lint
+        run: yarn lint
 
       - name: Running unit tests
-        run: yarn --cwd packages/react-vvm jest --coverage
+        run: yarn jest --coverage
 
       - name: Setting upsteam
         run: git push --set-upstream origin master

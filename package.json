@@ -18,8 +18,10 @@
     "lint:docs": "yarn --cwd packages/docs lint",
     "lint": "yarn lint:package && yarn lint:docs",
 
+    "pub": "yarn --cwd packages/react-vvm pub",
+
     "watch:package": "yarn --cwd packages/react-vvm watch",
-    "jest:package": "yarn --cwd packages/react-vvm jest"
+    "jest": "yarn --cwd packages/react-vvm jest"
   },
   "workspaces": [
     "packages/docs",

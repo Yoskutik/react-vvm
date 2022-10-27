@@ -34,7 +34,7 @@ const Badges: FC = () => (
         src="https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/coverage-jest%20coverage.svg"
         alt="Coverage"
       />
-      <img src="https://github.com/Yoskutik/react-vvm/actions/workflows/tests.yml/badge.svg" alt="Tests" />
+      <img src="https://github.com/Yoskutik/react-vvm/actions/workflows/build.yml/badge.svg" alt="Build" />
     </Box>
   </Box>
 );

@@ -17,6 +17,6 @@
       "@yoskutik/react-vvm": ["src"]
     }
   },
-  "include": ["src", "metadata.d.ts", "tests"],
+  "include": ["src", "metadata.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
