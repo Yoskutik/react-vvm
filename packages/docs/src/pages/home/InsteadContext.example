@@ -1,0 +1,27 @@
+import React, { FC } from 'react';
+import { view, childView } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './path-to-view-model';
+
+const SomeChildView = childView<SomeViewModel>()(({ viewModel }) => (
+  <div>
+    {/* You can use view models as context at any depth level inside a view */}
+    <span>Counter: {viewModel.counter}</span>
+
+    {/* You can also use view's props with a viewModel object, so there's no need to drill them */}
+    <span>{viewModel.viewProps.prop1}</span>
+  </div>
+));
+
+type SomeViewProps = {
+  prop1: number;
+};
+
+const SomeView: FC<SomeViewProps> = view(SomeViewModel)(({ viewModel, prop1 }) => (
+  <div>
+    {/* You can use view models as context */}
+    <span>Counter: {viewModel.counter}</span>
+    <span>Sum: {viewModel.counter + prop1}</span>
+    <button onClick={() => viewModel.increase()}>Update</button>
+    <SomeChildView />
+  </div>
+))

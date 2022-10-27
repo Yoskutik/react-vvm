@@ -1,0 +1,42 @@
+import { intercept, makeObservable, observable, observe, when } from 'mobx';
+import { ViewModel } from '@yoskutik/react-vvm';
+
+export class SomeViewModel extends ViewModel {
+  @observable field = 0;
+
+  constructor() {
+    super();
+    makeObservable(this);
+
+    // If you want to create a reaction, please, use this.reaction instead of reaction from the mobx package
+    this.reaction(() => this.field, value => this.doSomething(value));
+
+    // If you want to create an autorun, please, use this.reaction instead of reaction from the mobx package
+    this.autorun(() => {
+      this.doSomething(this.field);
+    });
+
+    // In case you want to create other type of observation, such as observe, intercept or when, you can use
+    // this.addDisposer
+
+    // observe
+    this.addDisposer(
+      observe(this, 'field', ({ newValue }) => this.doSomething(newValue))
+    );
+
+    // intercept
+    this.addDisposer(
+      intercept(this, 'field', change => {
+        this.doSomething(change.newValue);
+        return change;
+      }),
+    );
+
+    // when
+    const w = when(() => this.field === 1);
+    w.then(() => this.doSomething(this.field));
+    this.addDisposer(() => w.cancel());
+  }
+
+  doSomething = (field: number) => {};
+}

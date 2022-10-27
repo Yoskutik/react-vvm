@@ -1,0 +1,29 @@
+import { ViewModel } from '@yoskutik/react-vvm';
+import type { SomeViewProps } from './path-to-view-props';
+
+// Hooks can be sync and async. Also, they can be decorated with @action or other decorators
+export class SomeViewModel extends ViewModel<unknown, SomeViewProps> {
+  protected onViewMounted() {
+    console.log('View has been mounted. This function is called in the useEffect hook');
+  }
+
+  protected onViewMountedSync() {
+    console.log('View has been mounted. This function is called in the useLayoutEffect hook');
+  }
+
+  protected onViewUpdated() {
+    console.log('View has been updated. This function is called in the useEffect hook');
+  }
+
+  protected onViewUpdatedSync() {
+    console.log('View has been updated. This function is called in the useLayoutEffect hook');
+  }
+
+  protected onViewUnmounted() {
+    console.log('View has been unmounted. This function is called in the useEffect hook');
+  }
+
+  protected onViewUnmountedSync() {
+    console.log('View has been unmounted. This function is called in the useLayoutEffect hook');
+  }
+}

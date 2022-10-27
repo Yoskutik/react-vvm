@@ -1,0 +1,17 @@
+import React from 'react';
+import { ChildViewComponent } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './path-to-view-model';
+
+export type Props = {
+  prop1: number;
+  prop2?: string;
+};
+
+class SomeChildView extends ChildViewComponent<SomeViewModel, Props> {
+  render() {
+    return (
+      // viewModel is a class member, not a property of the component
+      <div>{this.viewModel.field1}</div>
+    );
+  }
+}

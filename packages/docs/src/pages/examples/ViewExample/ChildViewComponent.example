@@ -1,0 +1,16 @@
+import { ChildViewComponent, view } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './SomeViewModel';
+
+type Props = {
+  prop1: number;
+}
+
+// This is a child view. It should be used somewhere inside a view with SomeViewModel view model
+export class SomeChildView extends ChildViewComponent<SomeViewModel, Props> {
+  render() {
+    return <div>{this.viewModel.field}</div>;
+  }
+}
+
+// But if you want to make it act as view, you can wrap it with the view function
+export default view(SomeViewModel)((props: Props) => <SomeChildView {...props} />);

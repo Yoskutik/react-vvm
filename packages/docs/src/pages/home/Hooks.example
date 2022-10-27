@@ -1,0 +1,21 @@
+import { view, ViewModel } from '@yoskutik/react-vvm';
+
+class SomeViewModel extends ViewModel {
+  protected onViewMountedSync() {
+    console.log('This function can be used instead of useLayoutEffect(() => {...}, [])');
+  }
+
+  protected onViewUnmounted() {
+    console.log('This function can be used instead of returned function in useEffect(() => {...}, [])');
+  }
+
+  protected onViewUpdated() {
+    console.log('This function can be partially used instead of useEffect(() => {...})');
+  }
+}
+
+const SomeView = view(SomeViewModel)(() => (
+  <div>
+    Thus, the view can start to consist exclusively of JSX code
+  </div>
+));

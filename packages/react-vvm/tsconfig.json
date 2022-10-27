@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es6",
+    "lib": ["dom", "es2018"],
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "removeComments": false,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "baseUrl": "./",
+    "paths": {
+      "@yoskutik/react-vvm": ["src"]
+    }
+  },
+  "include": ["src", "metadata.d.ts", "tests"],
+  "exclude": ["node_modules", "dist"]
+}

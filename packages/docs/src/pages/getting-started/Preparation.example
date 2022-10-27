@@ -1,0 +1,10 @@
+import 'reflect-metadata';
+import { configure } from '@yoskutik/react-vvm';
+import { createRoot } from 'react-dom/client';
+
+// Optional step
+configure({
+  ...
+});
+
+createRoot(...).render(...);

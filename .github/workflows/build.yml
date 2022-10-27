@@ -23,22 +23,35 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
-      - name: Dependancies installation
-      - run: yarn install
+      - name: Install
+        run: yarn install
 
-      - name: Building
-      - run: yarn build
+      - name: Build all 🔧
+        run: yarn build
+
+      - name: Deploy documentation 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: packages/docs/build
 
       - name: Linting
-      - run: yarn lint
+        run: yarn --cwd packages/react-vvm lint
 
       - name: Running unit tests
-      - run: yarn jest --coverage
+        run: yarn --cwd packages/react-vvm jest --coverage
 
-      - name: Generating the size badge
-      - run: node ../scripts/size-badge.js
+      - name: Setting upsteam
+        run: git push --set-upstream origin master
 
       - name: Generating coverage badges
         uses: jpb06/jest-badges-action@latest
         with:
+          coverage-summary-path: packages/react-vvm/coverage/coverage-summary.json
           branches: master,preprod,staging
+
+      - name: Generating the size badge
+        run: |
+          node .github/scripts/size-badge.js
+          git add badges/weight.svg
+          git commit -m "Generating the size badge"
+          git push

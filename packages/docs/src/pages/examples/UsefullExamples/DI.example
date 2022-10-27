@@ -1,0 +1,60 @@
+import { computed, makeObservable, observable } from 'mobx';
+// It's not necessary to use tsyringe. You can use any library actually
+import { injectable, container, singleton } from 'tsyringe';
+import { configure, ViewModel } from '@yoskutik/react-vvm';
+
+configure({
+  vmFactory: VM => container.resolve(VM),
+});
+
+// This is an example of common store for the whole application
+@singleton()
+class SomeOuterClass {
+  @observable field1 = 0;
+
+  @observable field2 = 'field2';
+
+  constructor() {
+    makeObservable(this);
+  }
+
+  doSomething = () => {
+    // do something
+  };
+}
+
+// It can also be any singleton or transient class, containing observable fields is not necessary
+@injectable()
+class SomeOuterClass2 {
+  @observable field1 = 0;
+
+  @observable field2 = 'field2';
+
+  constructor(private someOuterClass: SomeOuterClass) {
+    makeObservable(this);
+  }
+
+  doSomething = () => {
+    // do something
+  };
+}
+
+@injectable()
+class SomeViewModel extends ViewModel {
+  @computed get someGetter() {
+    return this.someOuterClass.field1;
+  }
+
+  // And now every ViewModel can access the class via constructor
+  constructor(private someOuterClass: SomeOuterClass, private someOuterClass2: SomeOuterClass2) {
+    super();
+    makeObservable(this);
+  }
+
+  viewModelFunction = () => {
+    this.someOuterClass.doSomething();
+  }
+}
+
+// You can also get an instance of singleton class in the any place of your code
+const instance = container.resolve(SomeOuterClass);

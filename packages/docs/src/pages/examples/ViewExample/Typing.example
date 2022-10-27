@@ -1,0 +1,28 @@
+import React, { FC } from 'react';
+import { view, childView } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './path-to-view-model';
+
+// View1 and ChildView1 don't have any props
+export const View1 = view(SomeViewModel)(({ viewModel }) => <div />);
+export const ChildView1 = childView<SomeViewModel>()(({ viewModel }) => <div />);
+
+// The lines below will not be compiled
+// <View1 viewModel={...} />
+// <ChildView1 viewModel={...} />
+
+export type Props = {
+  prop1: number; // A required prop
+  prop2?: string; // An optional prop
+}
+
+export const View2: FC<Props> = view(SomeViewModel)(({ viewModel, prop1, prop2 }) => (
+  <div />
+));
+
+export const ChildView2: FC<Props> = childView<SomeViewModel>()(({ viewModel, prop1, prop2 }) => (
+  <div />
+));
+
+// And now you can pass the props
+// <View2 prop1={2} prop2="prop2" />
+// <ChildView2 prop1={2} prop2="prop2" />

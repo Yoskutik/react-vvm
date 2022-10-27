@@ -1,0 +1,52 @@
+import { computed, makeObservable } from 'mobx';
+import { view, childView, ViewModel } from '@yoskutik/react-vvm';
+import { FC } from 'react';
+
+type SomeViewProps = {
+  prop1: number;
+  prop2: string;
+}
+
+export class SomeViewModel extends ViewModel<unknown, SomeViewProps> {
+  @computed get prop1() {
+    return this.viewProps.prop1;
+  }
+
+  constructor() {
+    super();
+    makeObservable(this);
+  }
+
+  // It's better to add reactions in the onViewMounted hook, because parent and viewProps are undefined in the
+  // constructor
+  protected onViewMounted() {
+    // This autorun will be called every time the view gets any new prop, even if the prop1 didn't change
+    this.autorun(() => {
+      console.log(this.viewProps.prop1);
+    });
+
+    // This reaction will be called only if the prop has changed
+    this.reaction(() => this.viewProps.prop1, () => {
+      console.log(this.viewProps.prop1);
+    });
+
+    // This autorun will be called only if the prop has changed
+    this.autorun(() => {
+      console.log(this.prop1);
+    });
+  }
+}
+
+const SomeChildView = childView<SomeViewModel>()(({ viewModel }) => (
+  <div>
+    {/* If you use the line below, SomeChildView will be re-rendered every time SomeView get any new prop */}
+    {viewModel.viewProps.prop1}
+
+    {/* If you use the line below, SomeChildView will be re-rendered only if prop1 was changed */}
+    {viewModel.prop1}
+  </div>
+));
+
+const SomeView: FC<SomeViewProps> = view(SomeViewModel)(() => (
+  <SomeChildView />
+));

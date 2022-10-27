@@ -1,0 +1,23 @@
+import { ViewModel } from '@yoskutik/react-vvm';
+import { action, observable, makeObservable } from 'mobx';
+import type { ParentViewModel } from '../path-to-parent-view-model';
+import type { SomeViewProps } from './path-to-view';
+
+export class SomeViewModel extends ViewModel<ParentViewModel, SomeViewProps> {
+  @observable field1 = 0;
+
+  @observable field2 = 'field';
+
+  constructor() {
+    super();
+    makeObservable(this);
+  }
+
+  protected onViewMounted() {
+    // do something
+  }
+
+  @action doSomething = () => {
+    // do something
+  };
+}

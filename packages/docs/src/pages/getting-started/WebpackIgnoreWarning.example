@@ -1,0 +1,9 @@
+module.exports = {
+  // ...
+  ignoreWarnings: [
+    {
+      module: /@yoskutik\/react-vvm/,
+    },
+  ],
+  // ...
+};

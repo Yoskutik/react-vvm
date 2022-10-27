@@ -1,0 +1,17 @@
+import React from 'react';
+import { view, childView } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './path-to-view-model';
+
+export const ChildView = childView<SomeViewModel>()(({ viewModel }) => <div />);
+
+// ChildView has a view model of View1 or View2, so it must be somewhere inside them
+export const View1 = view(SomeViewModel)(({ viewModel }) => (
+  <ChildView />
+));
+
+// It doesn't need to be the direct child
+export const View2 = view(SomeViewModel)(({ viewModel }) => (
+  <div>
+    <ChildView />
+  </div>
+));

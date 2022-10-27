@@ -1,0 +1,21 @@
+import { FC, ReactElement } from 'react';
+import { configure } from '@yoskutik/react-vvm';
+
+const CustomWrapper: FC<{ children: ReactElement }> = ({ children }) => {
+  // do anything you want
+  return (
+    <div>
+      You can also add JSX
+      {children}
+    </div>
+  );
+};
+
+configure({
+  vmFactory: VM => {
+    const viewModel = new VM();
+    // do anything you want
+    return viewModel;
+  },
+  Wrapper: CustomWrapper,
+});

@@ -1,0 +1,22 @@
+import { makeObservable, observable } from 'mobx';
+import { configure, ViewModel } from '@yoskutik/react-vvm';
+
+configure({
+  vmFactory: VM => {
+    const viewModel = new VM();
+    makeObservable(viewModel);
+    return viewModel;
+  },
+});
+
+class SomeViewModel extends ViewModel {
+  @observable field1 = 0;
+
+  protected onViewMounted() {
+    // In case you make view models observable in a vmFactory, and you want to create reactions,
+    // you should do it in the hook
+    this.reaction(() => this.field1, () => {
+      // do something
+    });
+  }
+}

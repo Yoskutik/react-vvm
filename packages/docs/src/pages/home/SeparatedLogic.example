@@ -1,0 +1,22 @@
+import { action, makeObservable, observable } from 'mobx';
+import { view, ViewModel } from '@yoskutik/react-vvm';
+
+class CounterViewModel extends ViewModel {
+  @observable counter = 0;
+
+  constructor() {
+    super();
+    makeObservable(this);
+  }
+
+  @action increase = () => {
+    this.counter++;
+  }
+}
+
+const Counter = view(CounterViewModel)(({ viewModel }) => (
+  <div>
+    <span>Counter: {viewModel.counter}</span>
+    <button onClick={() => viewModel.increase()}>Update</button>
+  </div>
+))

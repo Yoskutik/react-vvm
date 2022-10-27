@@ -1,0 +1,33 @@
+import { configure } from '@yoskutik/react-vvm';
+import { Component, FC, ReactElement } from 'react';
+
+// The Wrapper can be declared both with functional style or as class
+// It must have children as a prop, at it should return a children. Otherwise, your views will not be shown.
+const FunctionalWrapper: FC<{ children: ReactElement }> = ({ children }) => {
+  // You can add a debug info
+  console.log('view is rendered');
+
+  // You should return children
+  return children;
+};
+
+// You can also use class components
+class ClassWrapper extends Component<{ children: ReactElement }> {
+  render() {
+    // You can also return processed children
+    return (
+      <div>
+        <span>Wrapper content</span>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+configure({
+  Wrapper: FunctionalWrapper,
+});
+
+configure({
+  Wrapper: ClassWrapper,
+});

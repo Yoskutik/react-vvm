@@ -1,0 +1,19 @@
+import { configure } from '@yoskutik/react-vvm';
+
+configure({
+  vmFactory: VM => {
+    // By default, vmFactory returns new VM();
+
+    const viewModel = new VM();
+
+    // But you can do anything here
+    // Add debug information
+    console.log('view model created:', viewModel);
+
+    // Or process your view model somehow
+    (viewModel as any).__some_special_field = 'some special value';
+
+    // vmFactory must return an instance of a ViewModel
+    return viewModel;
+  },
+})

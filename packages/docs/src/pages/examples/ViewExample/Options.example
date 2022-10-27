@@ -1,0 +1,32 @@
+import React, { FC } from 'react';
+import { view, childView } from '@yoskutik/react-vvm';
+import { SomeViewModel } from './path-to-view-model';
+
+// View1 and ChildView1 are observers and they are memoized
+export const View1 = view(SomeViewModel)(({ viewModel }) => <div />);
+export const ChildView1 = childView<SomeViewModel>()(({ viewModel }) => <div />);
+
+// View2 and ChildView2 are not observers now, but they still memoized with default behaviour
+export const View2 = view(SomeViewModel)(({ viewModel }) => (
+  <div />
+), { observer: false });
+export const ChildView2 = childView<SomeViewModel>()(({ viewModel }) => (
+  <div />
+), { observer: false });
+
+
+type Props = {
+  prop1: number;
+}
+
+const propsAreEqual = (prevProps: Props, nextProps: Props) => {
+  // logic here
+};
+
+// And this is how you can change propsAreEqual function for the memo
+export const View3: FC<Props> = view(SomeViewModel)(({ viewModel }) => (
+  <div />
+), { propsAreEqual });
+export const ChildView3: FC<Props> = childView<SomeViewModel>()(({ viewModel }) => (
+  <div />
+), { propsAreEqual });
