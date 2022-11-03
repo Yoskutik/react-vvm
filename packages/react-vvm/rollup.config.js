@@ -13,9 +13,11 @@ export default [false, true].map(isDev => ({
     typescript({
       tsconfig: `./tsconfig.json`,
       target: 'es6',
-      ...(!isDev && {
+      ...(!isDev ? {
         declarationDir: 'dist',
         declaration: true,
+      } : {
+        removeComments: true,
       }),
     }),
     define({

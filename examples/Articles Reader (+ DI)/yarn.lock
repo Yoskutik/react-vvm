@@ -513,10 +513,10 @@
     eslint-plugin-react "^7.30.0"
     eslint-plugin-react-hooks "^4.5.0"
 
-"@yoskutik/react-vvm@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@yoskutik/react-vvm/-/react-vvm-1.0.0.tgz#75ec467f71e729f41daa94e3f859a7bbe7be86da"
-  integrity sha512-N9Ba+a+WrAPHrbW77JDG2BEFgkOWc6JjAGerTBRAiGHUD+izvzXGF9uAd2KQUw7nvBVjuVvM1Ur6GK3/BnYnHA==
+"@yoskutik/react-vvm@^1.1.1":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@yoskutik/react-vvm/-/react-vvm-1.1.0.tgz#dfca7eb0a7892744ce315c55ee5da9f8a252e353"
+  integrity sha512-g5jSPjv5d6b5ZuC+dIr44taGvDbZEvQDi/P5KXIqxBo+8wjglML4w8ucGaZh1GEU3G3H2R/kFCBF5H1gnp3qng==
 
 accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
   version "1.3.7"

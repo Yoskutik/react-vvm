@@ -7,6 +7,9 @@ the chosen one.
 
 Here you can see an example of using views and child views.
 
+There are 2 view models. One for `App`, so it becomes a store for the whole application, and one
+a component, so it becomes a store for this component only.
+
 This example is using the next versions of the libraries:
 
 * `react` - 17

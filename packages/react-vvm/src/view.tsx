@@ -1,6 +1,6 @@
 import {
   createContext, memo, useContext, useState, FC, createElement, useLayoutEffect, useRef, forwardRef,
-  ForwardedRef, ReactElement, useEffect, Component,
+  ForwardedRef, ReactElement, useEffect, PureComponent,
 } from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
@@ -30,7 +30,7 @@ const createComponent = (
 ) => {
   const isForwardRef = component.$$typeof === Symbol.for('react.forward_ref');
 
-  let hoc: any = (props, ref) => {
+  let Component: any = (props, ref) => {
     const viewModel = vmFactory(props);
 
     let element: any = createElement(
@@ -47,16 +47,16 @@ const createComponent = (
   };
 
   if (isForwardRef) {
-    hoc = forwardRef(hoc);
+    Component = forwardRef(Component);
   }
 
-  hoc = memo(hoc, options.propsAreEqual);
+  Component = memo(Component, options.propsAreEqual);
 
   if (isDev) {
-    hoc.displayName = `${!vmName ? 'Child' : ''}View${vmName ? `@${vmName}` : ''}`;
+    Component.displayName = `${!vmName ? 'Child' : ''}View${vmName ? `@${vmName}` : ''}`;
   }
 
-  return hoc;
+  return Component;
 };
 
 type TViewOptions<T> = {
@@ -137,7 +137,7 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
       }));
 
       return viewModel;
-    }, options, VM.name)
+    }, options, VM.name || 'Anonymous')
   )
 );
 
@@ -158,7 +158,7 @@ export const childView = <V extends ViewModel>() => (
  * A class with which you can create a ChildView. The context of this class is equals to a view model. And also
  * there's a typed getter viewModel, which is just an alias of the context field.
  */
-export class ChildViewComponent<V, P = unknown, S = unknown> extends Component<P, S> {
+export class ChildViewComponent<V, P = unknown, S = unknown, SS = any> extends PureComponent<P, S, SS> {
   static contextType = ViewModelContext;
 
   get viewModel(): V {

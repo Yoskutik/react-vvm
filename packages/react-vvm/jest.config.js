@@ -8,5 +8,5 @@ module.exports = {
         '@yoskutik/react-vvm': '<rootDir>/src',
     },
     setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
-    coverageReporters: ['json-summary'],
+    coverageReporters: ['json-summary', 'text'],
 };

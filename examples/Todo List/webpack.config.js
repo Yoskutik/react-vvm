@@ -31,28 +31,14 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.jsx'],
       alias: {
-		...['components'].reduce((acc, it) => ({
-        [`@${it}`]: path.resolve(__dirname, 'src', it),
-        ...acc,
-      }), {}),
-	    '@yoskutik/react-vvm': path.resolve(__dirname, 'node_modules/@yoskutik/react-vvm/es5'),
-	  },
+        '@components': path.resolve(__dirname, 'src/components'),
+	    },
     },
-    performance: { hints: false },
-    infrastructureLogging: { level: 'error' },
     optimization: {
-      minimize: isProd,
       minimizer: [
-        new TerserPlugin({
-          parallel: true,
-          extractComments: false,
-          terserOptions: {
-            output: { comments: false },
-          },
-        }),
-      ]
+        new TerserPlugin(),
+      ],
     },
-    node: { global: true },
     plugins: [
       new HtmlWebpackPlugin({
         template: './src/index.ejs',

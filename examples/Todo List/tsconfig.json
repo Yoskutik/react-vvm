@@ -26,9 +26,7 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "@components": ["src/components"],
-      "@services": ["src/services"],
-      "@utils": ["src/utils"]
+      "@components": ["src/components"]
     }
   },
   "include": [

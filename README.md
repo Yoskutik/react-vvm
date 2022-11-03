@@ -20,9 +20,9 @@ You can find the React VVM documentation [on the website](https://yoskutik.githu
 
 The documentation is divided into several sections:
 
-* [Getting Started](https://yoskutik.github.io/react-vvm/getting-started)
-* [API Description](https://yoskutik.github.io/react-vvm/docs)
-* [Examples](https://yoskutik.github.io/react-vvm/examples)
+* [Getting Started](https://yoskutik.github.io/react-vvm#/getting-started)
+* [API Description](https://yoskutik.github.io/react-vvm#/docs)
+* [Examples](https://yoskutik.github.io/react-vvm#/examples)
 
 ## Examples
 
@@ -57,7 +57,7 @@ That's a basic counter example. The component consists of JSX code only. All the
 in the view model. This is a fairly short example. However, the larger the component becomes, the
 better the benefits of the MVVM approach are seen.
 
-We have several short examples [on the website](https://yoskutik.github.io/react-vvm/examples). And
+We have several short examples [on the website](https://yoskutik.github.io/react-vvm#/examples). And
 also there are several
 [full-fledged examples](https://github.com/Yoskutik/react-vvm/tree/master/examples)
 of applications with React VVM

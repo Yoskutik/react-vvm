@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
     const isProd = argv.mode === 'production';
@@ -15,7 +14,7 @@ module.exports = (env, argv) => {
         output: {
             path: path.join(__dirname, 'build'),
             filename: `${isProd ? '[contenthash]' : '[name]'}.bundle.js`,
-            chunkFilename: `./resources/chunks/${isProd ? '[contenthash]' : '[id]'}.chunk.js`,
+            chunkFilename: `./chunks/${isProd ? '[contenthash]' : '[id]'}.chunk.js`,
             clean: true,
         },
         target: isProd ? 'browserslist' : 'web',
@@ -30,7 +29,6 @@ module.exports = (env, argv) => {
         },
         resolve: {
             alias: {
-                // '@yoskutik/react-vvm': path.resolve(__dirname, 'node_modules/@yoskutik/react-vvm/es5'),
                 '@components': path.resolve(__dirname, 'src/components'),
                 '@pages': path.resolve(__dirname, 'src/pages'),
             },
@@ -39,7 +37,7 @@ module.exports = (env, argv) => {
         optimization: {
             minimizer: [
                 new TerserPlugin(),
-            ]
+            ],
         },
         plugins: [
             new HtmlPlugin({
@@ -47,11 +45,6 @@ module.exports = (env, argv) => {
                 scriptLoading: 'blocking',
                 template: './src/index.html',
             }),
-            // new CopyPlugin({
-            //    patterns: [
-            //        { from: 'public', to: './' },
-            //    ],
-            // }),
         ],
         devServer: {
             open: true,

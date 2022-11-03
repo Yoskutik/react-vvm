@@ -2,7 +2,7 @@ import { autorun, makeObservable, observable, reaction } from 'mobx';
 
 type TDisposer = () => void;
 
-/** An abstract class for view models */
+/** A base class for view models */
 export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unknown> {
   /** An array of disposers which are called after the view becomes unmounted */
   private d: TDisposer[] = [];
@@ -48,22 +48,22 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
     this.d.push(disposer);
   }
 
-  /** A function that is called after the View has become mounted. Calls in the {@see React.useEffect} hook */
+  /** A function that is called after the View has become mounted. Calls in the {@link React.useEffect} hook */
   protected onViewMounted?(): void;
 
-  /** A function that is called after the View has been rendered. Calls in the {@see React.useEffect} hook */
+  /** A function that is called after the View has been rendered. Calls in the {@link React.useEffect} hook */
   protected onViewUpdated?(): void;
 
-  /** A function that is called after the View has become unmounted. Calls in the {@see React.useEffect} hook */
+  /** A function that is called after the View has become unmounted. Calls in the {@link React.useEffect} hook */
   protected onViewUnmounted?(): void;
 
-  /** A function that is called after the View has become mounted. Calls in the {@see React.useLayoutEffect} hook */
+  /** A function that is called after the View has become mounted. Calls in the {@link React.useLayoutEffect} hook */
   protected onViewMountedSync?(): void;
 
-  /** A function that is called after the View has been rendered. Calls in the {@see React.useLayoutEffect} hook */
+  /** A function that is called after the View has been rendered. Calls in the {@link React.useLayoutEffect} hook */
   protected onViewUpdatedSync?(): void;
 
-  /** A function that is called after the View has become unmounted. Calls in the {@see React.useLayoutEffect} hook */
+  /** A function that is called after the View has become unmounted. Calls in the {@link React.useLayoutEffect} hook */
   protected onViewUnmountedSync?(): void;
 }
 

@@ -31,31 +31,15 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.jsx'],
       alias: {
-        ...['services', 'components'].reduce((acc, it) => ({
-          [`@${it}`]: path.resolve(__dirname, 'src', it),
-          ...acc,
-        }), {}),
-        ...['react', 'mobx', 'mobx-react'].reduce((acc, it) => ({
-          [it]: path.resolve(__dirname, 'node_modules', it),
-          ...acc,
-        }), {}),
-      }
+        '@services': path.resolve(__dirname, 'src/services'),
+        '@components': path.resolve(__dirname, 'src/components'),
+      },
     },
-    performance: { hints: false },
-    infrastructureLogging: { level: 'error' },
     optimization: {
-      minimize: isProd,
       minimizer: [
-        new TerserPlugin({
-          parallel: true,
-          extractComments: false,
-          terserOptions: {
-            output: { comments: false },
-          },
-        }),
-      ]
+        new TerserPlugin(),
+      ],
     },
-    node: { global: true },
     plugins: [
       new HtmlWebpackPlugin({
         template: './src/index.ejs',
@@ -66,11 +50,8 @@ module.exports = (env, argv) => {
     devServer: {
       open: true,
     },
-    ignoreWarnings: [
-      {
-        module: /react-vvm/,
-        // module: /@yoskutik\/react-vvm/,
-      },
-    ],
+    ignoreWarnings: [{
+      module: /@yoskutik\/react-vvm/,
+    }],
   };
 };

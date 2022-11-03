@@ -198,12 +198,23 @@ describe('Common use of View and ChildView', () => {
       expect(View.displayName).not.toEqual('View@SomeViewModel');
     });
 
-    test('Development', () => {
-      global.isDev = true;
-      const ChildView = childView<SomeViewModel>()(() => <div />);
-      const View = view(SomeViewModel)(() => <ChildView />);
-      expect(ChildView.displayName).toEqual('ChildView');
-      expect(View.displayName).toEqual('View@SomeViewModel');
+    describe('Development', () => {
+      test('Named view model', () => {
+        global.isDev = true;
+        const ChildView = childView<SomeViewModel>()(() => <div />);
+        const View = view(SomeViewModel)(() => <ChildView />);
+        expect(ChildView.displayName).toEqual('ChildView');
+        expect(View.displayName).toEqual('View@SomeViewModel');
+      });
+
+      test('Anonymous view model', () => {
+        global.isDev = true;
+        const AnonymousViewModel = (() => (
+          class extends ViewModel {}
+        ))();
+        const View = view(AnonymousViewModel)(() => <div />);
+        expect(View.displayName).toEqual('View@Anonymous');
+      });
     });
   });
 });

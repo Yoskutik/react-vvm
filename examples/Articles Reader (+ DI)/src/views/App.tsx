@@ -1,4 +1,4 @@
-import { ChildViewComponent, view, ViewModel } from '@yoskutik/react-vvm';
+import { view, ViewModel } from '@yoskutik/react-vvm';
 import { injectable } from 'tsyringe';
 import { action, observable } from 'mobx';
 import { HBox, ToastsContainer } from '@components';
@@ -27,27 +27,10 @@ export class AppViewModel extends ViewModel {
   };
 }
 
-class SomeViewModel extends ViewModel {
-  asd = 123;
-}
-
-type ChildViewProps = {
-  asd: number;
-};
-
-class ChildView extends ChildViewComponent<SomeViewModel, ChildViewProps> {
-  render() {
-    return <div>{this.props.asd}</div>
-  }
-}
-
-const SomeView = view(SomeViewModel)((props: ChildViewProps) => <ChildView {...props} />);
-
 export const App = view(AppViewModel)(() => (
   <HBox>
     <Articles/>
     <Statistics/>
     <ToastsContainer/>
-    <SomeView asd={1213} />
   </HBox>
 ));

@@ -19,7 +19,9 @@ export const ChildViewComponentDescription = () => (
     </Alert>
     <Typography component="p" sx={{ mt: 2 }}>
       The only difference between class-style ChildView and functional-style ChildView is that in the class-style {' '}
-      <Code>viewModel</Code> field is part of class, while in the function-style it&apos;s a property.
+      <Code>viewModel</Code> field is part of class, while in the function-style it&apos;s a property. And since
+      functional-style child views are declared with <Code>memo</Code>, <Code>ChildViewComponent</Code> is extended
+      from <Code>PureComponent</Code>.
     </Typography>
 
     <Title text="Usage sample" variant="h5" id={headings.view.sample} sx={{ mt: 3 }} />
