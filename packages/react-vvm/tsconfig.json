@@ -12,6 +12,7 @@
     "removeComments": false,
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "strict": true,
     "baseUrl": "./",
     "paths": {
       "@yoskutik/react-vvm": ["src"]

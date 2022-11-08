@@ -5,7 +5,7 @@ import { headings } from '../headings';
 import example from './ChildViewComponentDescription.example';
 
 export const ChildViewComponentDescription = () => (
-  <Box>
+  <Box sx={{ mt: 8 }}>
     <Title text="ChildViewComponent" variant="h3" id={headings.childViewComponent.main} />
     <Typography component="p" sx={{ mt: 2 }}>
       We highly recommend use to use React VVM with functional style components. But to increase compatibility, we added
@@ -24,7 +24,7 @@ export const ChildViewComponentDescription = () => (
       from <Code>PureComponent</Code>.
     </Typography>
 
-    <Title text="Usage sample" variant="h5" id={headings.view.sample} sx={{ mt: 3 }} />
+    <Title text="Usage sample" variant="h4" id={headings.childViewComponent.sample} sx={{ mt: 3 }} />
     <Highlighter sx={{ mt: 2 }} code={example} />
   </Box>
 );

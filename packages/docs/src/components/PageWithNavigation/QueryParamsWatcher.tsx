@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { childView } from '@yoskutik/react-vvm';
-import { PageWithNavigationViewModel } from '@components';
+import { PageWithNavigationViewModel } from './PageWithNavigationViewModel';
 
 export const QueryParamsWatcher = childView<PageWithNavigationViewModel>()(({ viewModel }) => {
   const searchParam = useSearchParams()[0];

@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { Alert, Link, Typography } from '@mui/material';
 import { Code } from '@components';
 import { headings as examplesHeadings } from '@pages/examples/headings';
 import { Grid, GridDivider, GridItem, GridTitle } from '../Grid';
 import { headings } from '../headings';
 
-export const VMDescription: FC = () => (
+export const VMDescription: FC = memo(() => (
   <Grid>
     <GridTitle id={headings.viewModel.description.properties} text="Properties" />
     <GridDivider />
@@ -45,6 +45,7 @@ export const VMDescription: FC = () => (
     <GridDivider />
 
     <GridTitle text="Methods" id={headings.viewModel.description.methods} />
+
     <GridDivider />
 
     <GridItem item="protected onViewMounted?()">
@@ -54,10 +55,10 @@ export const VMDescription: FC = () => (
       </Typography>
     </GridItem>
 
-    <GridItem item="protected onViewMountedSync?()">
+    <GridItem item="protected onViewUpdated?()">
       <Typography component="p">
-        A hook which is called after the view becomes mounted. The function is called in the {' '}
-        <Code>useLayoutEffect</Code> hook.
+        A hook which is called after the view is rendered besides the first render. This function is called in
+        the <Code>useEffect</Code> hook.
       </Typography>
     </GridItem>
 
@@ -68,24 +69,26 @@ export const VMDescription: FC = () => (
       </Typography>
     </GridItem>
 
-    <GridItem item="protected onViewUnmountedSync?()">
-      <Typography component="p">
-        A hook which is called after the view becomes unmounted. The function is called in the {' '}
-        <Code>useLayoutEffect</Code> hook.
-      </Typography>
-    </GridItem>
+    <GridDivider />
 
-    <GridItem item="protected onViewUpdated?()">
+    <GridItem item="protected onViewMountedSync?()">
       <Typography component="p">
-        A hook which is called after the view is rendered besides the first one. This function is also called in
-        the <Code>useEffect</Code> hook.
+        A hook which is called after the view becomes mounted. The function is called in the {' '}
+        <Code>useLayoutEffect</Code> hook.
       </Typography>
     </GridItem>
 
     <GridItem item="protected onViewUpdatedSync?()">
       <Typography component="p">
-        A hook which is called after the view is rendered besides the first one. This function is also called in
+        A hook which is called after the view is rendered besides the first render. This function is called in
         the <Code>useLayoutEffect</Code> hook.
+      </Typography>
+    </GridItem>
+
+    <GridItem item="protected onViewUnmountedSync?()">
+      <Typography component="p">
+        A hook which is called after the view becomes unmounted. The function is called in the {' '}
+        <Code>useLayoutEffect</Code> hook.
       </Typography>
       <Typography component="p" sx={{ mt: 2 }}>
         See using view hooks: {' '}
@@ -130,4 +133,4 @@ export const VMDescription: FC = () => (
 
     <GridDivider />
   </Grid>
-);
+));

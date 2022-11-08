@@ -96,13 +96,13 @@ describe('Common use of View and ChildView', () => {
     });
 
     test('ForwardRef', () => {
-      const View: ViewWithRef<HTMLDivElement> = view(SomeViewModel)(
+      const View = view(SomeViewModel)(
         forwardRef((_, ref) => (
           <div ref={ref}>
             Component
           </div>
         )),
-      );
+      ) as ViewWithRef<HTMLDivElement>;
 
       const ref = createRef<HTMLDivElement>();
       render(<View ref={ref} />);
@@ -155,19 +155,19 @@ describe('Common use of View and ChildView', () => {
     });
 
     test('ForwardRef', () => {
-      const ChildView: ViewWithRef<HTMLDivElement> = childView<SomeViewModel>()(
+      const ChildView = childView<SomeViewModel>()(
         forwardRef((_, ref) => (
           <div ref={ref}>
             Component
           </div>
         )),
-      );
+      ) as ViewWithRef<HTMLDivElement>;
 
-      const View: ViewWithRef<HTMLDivElement> = view(SomeViewModel)(
+      const View = view(SomeViewModel)(
         forwardRef((_, ref) => (
           <ChildView ref={ref}/>
         )),
-      );
+      ) as ViewWithRef<HTMLDivElement>;
 
       const ref = createRef<HTMLDivElement>();
       render(<View ref={ref} />);
@@ -191,7 +191,7 @@ describe('Common use of View and ChildView', () => {
 
   describe('Production and development difference', () => {
     test('Production', () => {
-      global.isDev = false;
+      (global as any).isDev = false;
       const ChildView = childView<SomeViewModel>()(() => <div />);
       const View = view(SomeViewModel)(() => <ChildView />);
       expect(ChildView.displayName).not.toEqual('ChildView');
@@ -200,7 +200,7 @@ describe('Common use of View and ChildView', () => {
 
     describe('Development', () => {
       test('Named view model', () => {
-        global.isDev = true;
+        (global as any).isDev = true;
         const ChildView = childView<SomeViewModel>()(() => <div />);
         const View = view(SomeViewModel)(() => <ChildView />);
         expect(ChildView.displayName).toEqual('ChildView');
@@ -208,7 +208,7 @@ describe('Common use of View and ChildView', () => {
       });
 
       test('Anonymous view model', () => {
-        global.isDev = true;
+        (global as any).isDev = true;
         const AnonymousViewModel = (() => (
           class extends ViewModel {}
         ))();

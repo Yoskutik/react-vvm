@@ -9,16 +9,26 @@ export class PageWithNavigationViewModel extends ViewModel {
     timeout: number,
   };
 
-  @observable.shallow private readonly headersOrdered: string[] = [];
+  @observable.shallow readonly headingsOrdered: {
+    id: string;
+    text: string;
+    level: number;
+  }[] = [];
 
   @observable.shallow private readonly visibleHeaders = new Set<string>();
 
-  @computed get firstVisibleHeader(): string {
-    return this.headersOrdered.find(it => this.visibleHeaders.has(it));
+  @computed get headingIds() {
+    return new Set(this.headingsOrdered.map(it => it.id));
   }
 
-  @action addHeader = (id: string, el: HTMLDivElement) => {
-    this.headersOrdered.push(id);
+  @computed get firstVisibleHeader(): string {
+    return this.headingsOrdered.find(it => this.visibleHeaders.has(it.id))?.id;
+  }
+
+  @action addHeader = (id: string, level: number, el: HTMLDivElement) => {
+    // eslint-disable-next-line no-console
+    this.headingIds.has(id) && console.error(`Id already exists: ${id}`);
+    this.headingsOrdered.push({ id, level, text: el.textContent });
     this.idToHeading[id] = el;
   };
 

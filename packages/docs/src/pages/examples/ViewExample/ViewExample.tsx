@@ -6,6 +6,7 @@ import typingExample from './Typing.example';
 import childViewExample from './ChildView.example';
 import optionsExample from './Options.example';
 import forwardRefExample from './ForwardRef.example';
+import ForwardRefStrictExample from './ForwardRefStrict.example';
 import classExample from './ChildViewComponent.example';
 
 export const ViewExample = () => (
@@ -42,6 +43,15 @@ export const ViewExample = () => (
     >
       If you want to use <Code>forwardRef</Code> HOC, you should switch from using <Code>FC</Code> type to {' '}
       <Code>ViewWithRef</Code> type from the library.
+    </ExampleBlock>
+
+    <ExampleBlock
+      title={<>Using <Code>forwardRef</Code> in the strict mode</>}
+      id={headings.basic.view.forwardRefStrict}
+      example={ForwardRefStrictExample}
+    >
+      The example above will not work if you are using TypeScript in the strict mode. The only way to apply typing is
+      using <Code>as</Code> keyword.
     </ExampleBlock>
 
     <ExampleBlock title="Using class components" id={headings.basic.view.classComponents} example={classExample}>

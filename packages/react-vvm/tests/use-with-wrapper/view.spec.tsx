@@ -8,7 +8,7 @@ describe('Using View with Wrapper', () => {
   describe('Error boundary', () => {
     let errorHandler: () => void;
 
-    const onGlobalError = evt => evt.preventDefault();
+    const onGlobalError = (evt: Event) => evt.preventDefault();
     beforeAll(() => global.addEventListener('error', onGlobalError));
     afterAll(() => global.addEventListener('error', onGlobalError));
 

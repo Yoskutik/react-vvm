@@ -4,12 +4,13 @@ import { SomeViewModel } from './path-to-view-model';
 
 export const ChildView = childView<SomeViewModel>()(({ viewModel }) => <div />);
 
-// ChildView has a view model of View1 or View2, so it must be somewhere inside them
+// ChildView does not create a view model and should be located somewhere inside a view.
+// Thus, it can use view's view model.
 export const View1 = view(SomeViewModel)(({ viewModel }) => (
   <ChildView />
 ));
 
-// It doesn't need to be the direct child
+// It doesn't have to be the direct child
 export const View2 = view(SomeViewModel)(({ viewModel }) => (
   <div>
     <ChildView />

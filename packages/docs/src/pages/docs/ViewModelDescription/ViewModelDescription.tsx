@@ -17,7 +17,7 @@ export const ViewModelDescription = () => (
       reference to the parent view model. Also, <Code>ViewModel</Code> has a few view&apos;s lifecycle methods.
     </Typography>
 
-    <Title variant="h5" id={headings.viewModel.parent} sx={{ mt: 3 }}>
+    <Title variant="h4" id={headings.viewModel.parent} sx={{ mt: 3 }}>
       What is <Code>parent</Code> for a ViewModel?
     </Title>
     <Typography component="p" sx={{ mt: 2 }}>
@@ -27,10 +27,10 @@ export const ViewModelDescription = () => (
       <Code>ViewModel2</Code>.
     </Typography>
 
-    <Title text="Description" variant="h5" id={headings.viewModel.description.main} sx={{ mt: 3 }} />
+    <Title text="Description" variant="h4" id={headings.viewModel.description.main} sx={{ mt: 3 }} />
     <VMDescription />
 
-    <Title text="Usage sample" variant="h5" id={headings.viewModel.sample} sx={{ mt: 3 }} />
+    <Title text="Usage sample" variant="h4" id={headings.viewModel.sample} sx={{ mt: 3 }} />
     <Highlighter sx={{ mt: 2 }} code={example} />
   </Box>
 );

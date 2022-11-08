@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { Box, Button, Toolbar } from '@mui/material';
 import { childView } from '@yoskutik/react-vvm';
 import { PageWithNavigationViewModel } from './PageWithNavigationViewModel';
@@ -24,24 +24,7 @@ const Link: FC<{ text: string, id: string }> = childView<PageWithNavigationViewM
   </Button>
 ));
 
-type TAnchorNavigationItem = {
-  text: string;
-  id: string;
-  children?: ReactNode;
-};
-
-export const AnchorNavigationItem: FC<TAnchorNavigationItem> = ({ text, id, children }) => (
- <>
-   <Link text={text} id={id} />
-   {children && (
-     <Box sx={{ pl: 2.5 }}>
-       {children}
-     </Box>
-   )}
- </>
-);
-
-export const AnchorNavigation: FC<{ children: ReactNode }> = ({ children }) => (
+export const AnchorNavigation = childView<PageWithNavigationViewModel>()(({ viewModel }) => (
   <Box
     sx={{
       borderRight: '1px solid rgba(0, 0, 0, 0.12)',
@@ -58,7 +41,11 @@ export const AnchorNavigation: FC<{ children: ReactNode }> = ({ children }) => (
   >
     <Toolbar />
     <Box sx={{ p: 1 }}>
-      {children}
+      {viewModel.headingsOrdered.map(({ id, level, text }) => (
+        <Box sx={{ pl: level * 2.5 }} key={id}>
+          <Link text={text} id={id} />
+        </Box>
+      ))}
     </Box>
   </Box>
-);
+));

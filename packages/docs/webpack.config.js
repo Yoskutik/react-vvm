@@ -23,6 +23,9 @@ module.exports = (env, argv) => {
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
             }, {
+                test: /\.svg$/,
+                loader: 'svg-url-loader',
+            }, {
                 test: /\.example$/,
                 type: 'asset/source',
             }],
@@ -31,6 +34,9 @@ module.exports = (env, argv) => {
             alias: {
                 '@components': path.resolve(__dirname, 'src/components'),
                 '@pages': path.resolve(__dirname, 'src/pages'),
+                'react': 'preact/compat',
+                'react-dom': 'preact/compat',
+                "react/jsx-runtime": 'preact/jsx-runtime',
             },
             extensions: ['.js', '.ts', '.tsx'],
         },

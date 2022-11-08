@@ -12,7 +12,7 @@ export const ConfigureDescription = () => (
       This library can be configured at the global level.
     </Typography>
 
-    <Title variant="h5" text="Usage" id={headings.configuration.usage} sx={{ mt: 3 }} />
+    <Title variant="h4" text="Usage" id={headings.configuration.usage} sx={{ mt: 3 }} />
     <Highlighter code="configure({ vmFactory, Wrapper })" sx={{ mt: 2 }} />
 
     <Grid>
@@ -49,7 +49,7 @@ export const ConfigureDescription = () => (
       </GridItem>
     </Grid>
 
-    <Title variant="h5" text="Usage sample" id={headings.configuration.sample} sx={{ mt: 3 }} />
+    <Title variant="h4" text="Usage sample" id={headings.configuration.sample} sx={{ mt: 3 }} />
     <Highlighter sx={{ mt: 2 }} code={example} />
   </Box>
 );

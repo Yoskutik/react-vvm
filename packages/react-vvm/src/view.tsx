@@ -10,40 +10,30 @@ import { configuration } from './configure';
 
 declare const isDev: boolean;
 
-const ViewModelContext = createContext<ViewModel>(null);
+const ViewModelContext = createContext<ViewModel | null>(null);
 
-/**
- * React documentation says:
- * > You may rely on useMemo as a performance optimization, not as a semantic guarantee. In the future, React may choose
- * > to “forget” some previously memoized values and recalculate them on next render, e.g. to free memory for offscreen
- * > components. Write your code so that it still works without useMemo — and then add it to optimize performance.
- *
- * Which is why useState is used instead of useMemo
- */
-const useValue = <T extends unknown>(state: () => T) => useState(state)[0];
-
-const createComponent = (
-  component: FC & { $$typeof?: symbol },
-  vmFactory: (props?) => ViewModel,
-  options: TViewOptions<unknown> = {},
+const createComponent = <P, V, R>(
+  component: BaseComponent<P, V, R> & { $$typeof?: symbol },
+  vmFactory: (props?: P) => ViewModel | null,
+  options: TViewOptions<P> = {},
   vmName?: string,
 ) => {
   const isForwardRef = component.$$typeof === Symbol.for('react.forward_ref');
 
-  let Component: any = (props, ref) => {
+  let Component: any = (props: P, ref: R) => {
     const viewModel = vmFactory(props);
 
     let element: any = createElement(
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      useValue(() => (options.observer === false ? component : observer(component))),
-      Object.assign({}, props, { viewModel, ref: isForwardRef ? ref : undefined }),
+      useState(() => (options.observer === false ? component : observer(component)))[0],
+      Object.assign({}, props, { viewModel, ref: isForwardRef ? ref : undefined } as any),
     );
 
     if (vmName) {
       element = createElement(ViewModelContext.Provider, { value: viewModel }, element);
     }
 
-    return createElement(configuration.Wrapper, null, element);
+    return createElement(configuration.Wrapper!, null, element);
   };
 
   if (isForwardRef) {
@@ -76,11 +66,11 @@ const onViewUnmountedSync = 'onViewUnmountedSync';
 
 const useLifeCycle = (
   hook: typeof useEffect,
-  viewModel: ViewModel,
+  viewModel: any,
   onUpdated: string,
   onMounted: string,
   onUnmounted: string,
-  updateCb: () => void,
+  updateCb: (() => void) | null,
   unmountCb?: () => void,
 ) => {
   const wasRendered = useRef(false);
@@ -117,23 +107,23 @@ const useLifeCycle = (
  * ));
  */
 export const view = <V extends ViewModel>(VM: Constructable<V>) => (
-  <P extends unknown = unknown, R = unknown>(
+  <P, R>(
     ViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (
     createComponent(ViewComponent, props => {
-      const viewModel = useValue(() => configuration.vmFactory(VM)) as any;
-      const parent = useContext(ViewModelContext);
+      const viewModel: any = useState(() => configuration.vmFactory!(VM))[0];
+      const parentViewModel = useContext(ViewModelContext);
 
       useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, null, () => {
-        viewModel.d = viewModel.d.filter(it => {
+        viewModel.d = viewModel.d.filter((it: () => void) => {
           it();
         });
       });
 
       useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, action(() => {
-        viewModel.parent = parent;
         viewModel.viewProps = props;
+        viewModel.parent = parentViewModel;
       }));
 
       return viewModel;
@@ -146,7 +136,7 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
  * uses one. ChildViews are memoized with {@link React.memo}.
  */
 export const childView = <V extends ViewModel>() => (
-  <P extends unknown = unknown, R = unknown>(
+  <P, R>(
     ChildViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (

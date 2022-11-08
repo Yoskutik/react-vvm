@@ -20,7 +20,7 @@ describe('Common use of ViewModel with reactions', () => {
     class SomeViewModel extends ViewModel<unknown, ViewProps> {
       protected onViewMounted() {
         this.reaction(() => this.viewProps, this.anyPropHasChanged);
-        this.reaction(() => this.viewProps.prop1, this.onePropHasChanged);
+        this.reaction(() => this.viewProps!.prop1, this.onePropHasChanged);
       }
 
       anyPropHasChanged = jest.fn();

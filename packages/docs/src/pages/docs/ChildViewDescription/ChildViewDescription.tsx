@@ -17,7 +17,7 @@ export const ChildViewDescription = () => (
       child is same as for view.
     </Typography>
 
-    <Title text="Usage" variant="h5" id={headings.childView.usage} sx={{ mt: 3 }} />
+    <Title text="Usage" variant="h4" id={headings.childView.usage} sx={{ mt: 3 }} />
     <Highlighter code="childView()(Component[, options])" sx={{ mt: 2 }} />
     <Typography component="p" sx={{ mt: 2 }}>
       See using ChildView: {' '}
@@ -26,7 +26,7 @@ export const ChildViewDescription = () => (
       </Link>.
     </Typography>
 
-    <Title text="Options" variant="h6" id={headings.childView.options} sx={{ mt: 3 }} />
+    <Title text="Options" variant="h5" id={headings.childView.options} sx={{ mt: 3 }} />
     <Typography component="p" sx={{ mt: 2 }}>
       See setting options: {' '}
       <Link href={`#/examples?heading=${examplesHeadings.basic.view.options}`}>
@@ -34,7 +34,7 @@ export const ChildViewDescription = () => (
       </Link>.
     </Typography>
 
-    <Title text="Usage sample" variant="h5" id={headings.childView.sample} sx={{ mt: 3 }} />
+    <Title text="Usage sample" variant="h4" id={headings.childView.sample} sx={{ mt: 3 }} />
     <Highlighter sx={{ mt: 2 }} code={example} />
   </Box>
 );

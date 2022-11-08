@@ -1,0 +1,22 @@
+import { view, ViewModel } from '@yoskutik/react-vvm';
+
+class ViewModel1 extends ViewModel {
+  doSomething = () => {};
+}
+
+class ViewModel2 extends ViewModel<ViewModel1> {
+  onClick = () => {
+    this.parent.doSomething();
+  };
+}
+
+// View2 must be located somewhere inside View1. Thus, view model of View1 will be a parent view model for View2
+const View2 = view(ViewModel2)(({ viewModel }) => (
+  <button onClick={viewModel.onClick} />
+));
+
+const View1 = view(ViewModel1)(({ viewModel }) => (
+  <div>
+    <View2 />
+  </div>
+));

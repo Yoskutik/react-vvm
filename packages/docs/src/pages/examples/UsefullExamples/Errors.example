@@ -2,19 +2,19 @@ import { Component, ReactElement } from 'react';
 import { configure } from '@yoskutik/react-vvm';
 
 class ErrorBoundary extends Component<{ children: ReactElement }, { hasError: boolean }> {
-  static getDerivedStateFromError(err: Error) {
-    // I recommend you to log the error to avoid situations where you content is disappeared,
-    // and you don't know the reason
-    console.error(err);
-
-    return {
-      hasError: true,
-    };
+  static getDerivedStateFromError() {
+    return { hasError: true };
   }
 
   state = {
     hasError: false,
   };
+
+  componentDidCatch(error: Error) {
+    // I recommend you to log the error to avoid situations where your content is disappeared,
+    // and you don't know the reason
+    console.error(error);
+  }
 
   render() {
     return !this.state.hasError && this.props.children;

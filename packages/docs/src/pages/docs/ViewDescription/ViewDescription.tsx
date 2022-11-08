@@ -1,8 +1,8 @@
 import { Alert, Box, Link, Typography } from '@mui/material';
 import { Highlighter, Code, Title } from '@components';
-import example from './View.example';
 import { headings as examplesHeadings } from '@pages/examples/headings';
 import { headings } from '../headings';
+import example from './View.example';
 
 export const ViewDescription = () => (
   <Box>
@@ -31,10 +31,10 @@ export const ViewDescription = () => (
       <Code>propsAreEqual</Code> function to it.
     </Typography>
 
-    <Title text="Usage" variant="h5" id={headings.view.usage} sx={{ mt: 3 }} />
+    <Title text="Usage" variant="h4" id={headings.view.usage} sx={{ mt: 3 }} />
     <Highlighter code="view(SomeViewModel)(Component[, options])" sx={{ mt: 2 }} />
 
-    <Title text="Options" variant="h6" id={headings.view.options} sx={{ mt: 3 }} />
+    <Title text="Options" variant="h5" id={headings.view.options} sx={{ mt: 3 }} />
     <Typography component="p" sx={{ mt: 2 }}>
       There are two options: <Code>observer</Code> and <Code>propsAreEqual</Code>. If <Code>observer</Code> is
       {' '} <Code>false</Code>, when view will be created as non-observer component. And if <Code>propsAreEqual</Code>
@@ -51,7 +51,7 @@ export const ViewDescription = () => (
       </Link>.
     </Typography>
 
-    <Title text="Usage sample" variant="h5" id={headings.view.sample} sx={{ mt: 3 }} />
+    <Title text="Usage sample" variant="h4" id={headings.view.sample} sx={{ mt: 3 }} />
     <Highlighter sx={{ mt: 2 }} code={example} />
   </Box>
 );

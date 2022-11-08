@@ -1,11 +1,12 @@
 import { Box } from '@mui/material';
 import { Code, Title } from '@components';
+import { headings } from '../headings';
+import { ExampleBlock } from '../ExampleBlock';
 import typingExample from './Typing.example';
 import optionsExample from './ViewProps.example';
+import parentExample from './Parent.example';
 import hooksExample from './Hooks.example';
 import reactionsExample from './Reactions.example';
-import { headings } from '../headings';
-import { ExampleBlock } from '@pages/examples/ExampleBlock';
 
 export const ViewModelExample = () => (
   <Box sx={{ mt: 3 }}>
@@ -21,6 +22,14 @@ export const ViewModelExample = () => (
     </ExampleBlock>
 
     <ExampleBlock
+      title={<>Using <Code>parent</Code></>}
+      id={headings.basic.viewModel.parent}
+      example={parentExample}
+    >
+      If a view is located somewhere inside another view, inner view can use outer one&apos;s view model.
+    </ExampleBlock>
+
+    <ExampleBlock
       title={<>Observing <Code>viewProps</Code></>}
       id={headings.basic.viewModel.viewProps}
       example={optionsExample}
@@ -28,7 +37,7 @@ export const ViewModelExample = () => (
       The <Code>viewProps</Code> field updates every time the view is rendered with new props. The view is memoized, so
       the amount of updates is minimized. But you need to keep in mind a few rules when you want to observe {' '}
       <Code>viewProps</Code>. If you are using <Code>viewProps</Code> inside an <Code>autorun</Code> or an observer
-      component (<Code>observer</Code>, <Code>view</Code> or <Code>childView</Code>), when the reaction will be calling
+      component (<Code>observer</Code>, <Code>view</Code> or <Code>childView</Code>), when the reaction will be called
       every time the view is rendered with new props.
     </ExampleBlock>
 

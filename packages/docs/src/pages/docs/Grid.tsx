@@ -22,5 +22,5 @@ export const GridItem: FC<{ item: string, children: ReactNode }> = ({ item, chil
 export const GridDivider: FC = () => <Divider sx={{ gridColumn: { md: '1 / 3' } }} />;
 
 export const GridTitle: FC<{ id: string, text: string }> = ({ id, text }) => (
-  <Title id={id} sx={{ gridColumn: { md: '1 / 3' } }} text={text} variant="h6" />
+  <Title id={id} sx={{ gridColumn: { md: '1 / 3' } }} text={text} variant="h5" />
 );

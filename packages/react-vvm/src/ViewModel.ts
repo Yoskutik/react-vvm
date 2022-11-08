@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { autorun, makeObservable, observable, reaction } from 'mobx';
 
 type TDisposer = () => void;
@@ -8,7 +9,7 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
   private d: TDisposer[] = [];
 
   /** Properties that were given to a view. This object is updated every time the view is rendered with the new props */
-  readonly viewProps: Readonly<P> = undefined;
+  readonly viewProps: Readonly<P> | undefined = undefined;
 
   /**
    * A view model instance which is defined in a view that contains the view of current view model.
@@ -24,7 +25,7 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
    *   </div>
    * </View1>
    */
-  readonly parent: V = undefined;
+  readonly parent: V | undefined = undefined;
 
   constructor() {
     // MobX 4 and MobX5 don't have makeObservable
@@ -35,12 +36,14 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
    * Add-on function for MobX's reaction. The disposer of the reaction will be automatically called after the view
    * becomes unmounted.
    */
+  // @ts-ignore
   protected reaction: typeof reaction;
 
   /**
    * Add-on function for MobX's autorun. The disposer of the autorun will be automatically called after the view
    * becomes unmounted.
    */
+  // @ts-ignore
   protected autorun: typeof autorun;
 
   /** A function for adding a disposer, that will be automatically called after the view becomes unmounted */
@@ -73,7 +76,7 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
 // For example, you may ask why do reaction and autorun declared in this way. Well, these functions are add-on
 // functions, which means they should have the same type as their alternatives from MobX. And it's actually a problem.
 // Reaction has generics and the number of generics is not constant in different versions of MobX. So, the only way to
-// type it is using typeof reaction. In this case I could declare these functions as class members, but in this way all
+// type it is using typeof keyword. In this case I could declare these functions as class members, but in this way all
 // view models start creating these functions during initialization. Which is not much, but will affect memory
 // consumption. Therefore, I decided to declare the typing of these functions as a member of the class, but really
 // declare it in the prototype of the class. In this case, only one function will be created for all view models.
@@ -89,7 +92,7 @@ const prototype = ViewModel.prototype as any;
 ].forEach(([f, name]) => {
   prototype[name] = function () {
     // eslint-disable-next-line prefer-rest-params
-    return this.d[this.d.push(f.apply(0, arguments)) - 1];
+    return this.d[this.d.push((f as any).apply(0, arguments)) - 1];
   };
 });
 
