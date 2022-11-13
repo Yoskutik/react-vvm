@@ -33,6 +33,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: packages/docs/build
+        if: github.event_name != 'pull_request'
 
       - name: Linting
         run: yarn lint
@@ -42,12 +43,14 @@ jobs:
 
       - name: Setting upsteam
         run: git push --set-upstream origin master
+        if: github.event_name != 'pull_request'
 
       - name: Generating coverage badges
         uses: jpb06/jest-badges-action@latest
         with:
           coverage-summary-path: packages/react-vvm/coverage/coverage-summary.json
           branches: master,preprod,staging
+        if: github.event_name != 'pull_request'
 
       - name: Generating the size badge
         run: |
@@ -55,3 +58,4 @@ jobs:
           git add badges/weight.svg
           git commit -m "Generating the size badge"
           git push
+        if: github.event_name != 'pull_request'
