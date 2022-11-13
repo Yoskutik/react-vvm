@@ -1,16 +1,22 @@
-import { FC, memo } from 'react';
+import { FC, memo, ReactNode } from 'react';
 import { Box, Link, Typography } from '@mui/material';
 import { Code, Highlighter } from '@components';
 import preparationExample from './Preparation.example';
 import webpackExample from './WebpackIgnoreWarning.example';
 
+const Block: FC<{ children: ReactNode, mt?: number, title: string }> = ({ children, mt = 8, title }) => (
+  <Box sx={{ mt }}>
+    <Typography component="h4" variant="h4">
+      {title}
+    </Typography>
+    {children}
+  </Box>
+);
+
 const GettingStarted: FC = memo(() => (
   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
     <Box sx={{ width: '1200px', maxWidth: '100%', p: 4 }}>
-      <Box>
-        <Typography component="h4" variant="h4">
-          Installation
-        </Typography>
+      <Block title="Installation" mt={undefined}>
         <Typography component="p" sx={{ mt: 2 }}>
           Run one of the following commands to add React VVM and all needed libraries:
         </Typography>
@@ -32,12 +38,9 @@ const GettingStarted: FC = memo(() => (
           sx={{ mt: 2 }}
           forceShowCopy
         />
-      </Box>
+      </Block>
 
-      <Box sx={{ mt: 8 }}>
-        <Typography component="h4" variant="h4">
-          Preparation
-        </Typography>
+      <Block title="Preparation">
         <Typography component="p" sx={{ mt: 4 }}>
           You must import <Code>reflect-metadata</Code> in your main script file so that you can use the decorators.
           You can also configure this package, but this step is optional.
@@ -49,19 +52,32 @@ const GettingStarted: FC = memo(() => (
           configuration.
         </Typography>
         <Highlighter code={webpackExample} sx={{ mt: 2 }} />
-      </Box>
+      </Block>
 
-      <Box sx={{ mt: 8 }}>
-        <Typography component="h4" variant="h4">
-          Usage
-        </Typography>
+      <Block title="Usage">
         <Typography component="p" sx={{ mt: 2 }}>
           You can find examples of using this package in {' '}
           <Link href="#/examples">
             the examples section
           </Link>.
         </Typography>
-      </Box>
+      </Block>
+
+      <Block title="Further read">
+        <Typography component="p" sx={{ mt: 2 }}>
+          Despite the fact that React VVM is an extremely small library, it can greatly affect the development process.
+          For a better understanding of the beauty of this library, we advise you to read an article about MobX and
+          MVVM: {' '}
+          <Link
+            rel="noreferrer"
+            target="_blank"
+            // eslint-disable-next-line max-len
+            href="https://dev.to/yoskutik/mobx-with-mvvm-makes-frontend-developers-life-much-more-easier-than-redux-does-547j"
+          >
+            English
+          </Link>.
+        </Typography>
+      </Block>
     </Box>
   </Box>
 ));
