@@ -16,7 +16,7 @@ const Block: FC<{ children: ReactNode, mt?: number, title: string }> = ({ childr
 const GettingStarted: FC = memo(() => (
   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
     <Box sx={{ width: '1200px', maxWidth: '100%', p: 4 }}>
-      <Block title="Installation" mt={undefined}>
+      <Block title="Installation" mt={0}>
         <Typography component="p" sx={{ mt: 2 }}>
           Run one of the following commands to add React VVM and all needed libraries:
         </Typography>
