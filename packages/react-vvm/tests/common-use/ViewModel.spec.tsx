@@ -34,10 +34,11 @@ describe('Common use of ViewModel', () => {
   describe('View lifecycle', () => {
     const checkHooks = (a: number, b: number, c: number) => {
       expect(viewModel.onViewMounted).toBeCalledTimes(a);
-      expect(viewModel.onViewMountedSync).toBeCalledTimes(a);
       expect(viewModel.onViewUpdated).toBeCalledTimes(b);
-      expect(viewModel.onViewUpdatedSync).toBeCalledTimes(b);
       expect(viewModel.onViewUnmounted).toBeCalledTimes(c);
+
+      expect(viewModel.onViewMountedSync).toBeCalledTimes(a);
+      expect(viewModel.onViewUpdatedSync).toBeCalledTimes(b);
       expect(viewModel.onViewUnmountedSync).toBeCalledTimes(c);
     };
 

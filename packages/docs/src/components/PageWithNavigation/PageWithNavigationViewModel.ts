@@ -1,6 +1,12 @@
 import { ViewModel } from '@yoskutik/react-vvm';
 import { action, computed, observable } from 'mobx';
 
+type THeading = {
+  id: string;
+  text: string;
+  level: number;
+};
+
 export class PageWithNavigationViewModel extends ViewModel {
   private readonly idToHeading: Record<string, HTMLDivElement> = {};
 
@@ -9,11 +15,7 @@ export class PageWithNavigationViewModel extends ViewModel {
     timeout: number,
   };
 
-  @observable.shallow readonly headingsOrdered: {
-    id: string;
-    text: string;
-    level: number;
-  }[] = [];
+  @observable.shallow readonly headingsOrdered: THeading[] = [];
 
   @observable.shallow private readonly visibleHeaders = new Set<string>();
 
