@@ -40,7 +40,7 @@ export const AnchorNavigation = childView<PageWithNavigationViewModel>()(({ view
     }}
   >
     <Toolbar />
-    <Box sx={{ p: 1 }}>
+    <Box sx={{ p: 1, overflow: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
       {viewModel.headingsOrdered.map(({ id, level, text }) => (
         <Box sx={{ pl: level * 2.5 }} key={id}>
           <Link text={text} id={id} />

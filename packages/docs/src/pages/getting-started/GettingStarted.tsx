@@ -13,6 +13,15 @@ const Block: FC<{ children: ReactNode, mt?: number, title: string }> = ({ childr
   </Box>
 );
 
+const BashBlock: FC<{ title: string, code: string }> = ({ title, code }) => (
+  <>
+    <Typography component="h5" variant="h5" sx={{ mt: 4 }}>
+      {title}
+    </Typography>
+    <Highlighter code={code} language="bash" sx={{ mt: 2 }} forceShowCopy />
+  </>
+);
+
 const GettingStarted: FC = memo(() => (
   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
     <Box sx={{ width: '1200px', maxWidth: '100%', p: 4 }}>
@@ -20,24 +29,8 @@ const GettingStarted: FC = memo(() => (
         <Typography component="p" sx={{ mt: 2 }}>
           Run one of the following commands to add React VVM and all needed libraries:
         </Typography>
-        <Typography component="h5" variant="h5" sx={{ mt: 4 }}>
-          npm
-        </Typography>
-        <Highlighter
-          code="npm install @yoskutik/react-vvm mobx mobx-react reflect-metadata"
-          language="bash"
-          sx={{ mt: 2 }}
-          forceShowCopy
-        />
-        <Typography component="h5" variant="h5" sx={{ mt: 2 }}>
-          yarn
-        </Typography>
-        <Highlighter
-          code="yarn add @yoskutik/react-vvm mobx mobx-react reflect-metadata"
-          language="bash"
-          sx={{ mt: 2 }}
-          forceShowCopy
-        />
+        <BashBlock title="npm" code="npm install @yoskutik/react-vvm mobx mobx-react reflect-metadata" />
+        <BashBlock title="yarn" code="yarn add @yoskutik/react-vvm mobx mobx-react reflect-metadata" />
       </Block>
 
       <Block title="Preparation">

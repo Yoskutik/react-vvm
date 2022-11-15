@@ -8,4 +8,4 @@ export const PageWithNavigation: FC<{ children: ReactNode }> = view(PageWithNavi
     {children}
     <QueryParamsWatcher />
   </>
-), { observer: false });
+));

@@ -1,34 +1,28 @@
-export const headings = {
-  basic: {
-    main: 'basic',
-    view: {
-      main: 'basic.view',
-      childView: 'basic.view.childView',
-      typings: 'basic.view.typings',
-      options: 'basic.view.options',
-      forwardRef: 'basic.view.forwardRef',
-      forwardRefStrict: 'basic.view.forwardRefStrict',
-      classComponents: 'basic.view.classComponents',
-    },
-    viewModel: {
-      main: 'basic.viewModel',
-      typings: 'basic.viewModel.typings',
-      parent: 'basic.viewModel.parent',
-      viewProps: 'basic.viewModel.viewProps',
-      hooks: 'basic.viewModel.hooks',
-      reactions: 'basic.viewModel.reactions',
-    },
-    configuration: {
-      main: 'basic.configuration',
-      vmFactory: 'basic.configuration.vmFactory',
-      wrapper: 'basic.configuration.wrapper',
-    },
-  },
-  useful: {
-    main: 'useful',
-    makeObservable: 'useful.makeObservable',
-    di: 'useful.di',
-    errors: 'useful.errors',
-  },
+import { createHeadingIds } from '@utils';
+
+export const headings = createHeadingIds({
+  basic: createHeadingIds({
+    view: createHeadingIds(undefined, [
+      'childView',
+      'typings',
+      'options',
+      'forwardRef',
+      'forwardRefStrict',
+      'classComponents',
+    ]),
+
+    viewModel: createHeadingIds(undefined, [
+      'typings',
+      'parent',
+      'viewProps',
+      'hooks',
+      'reactions',
+    ]),
+
+    configuration: createHeadingIds(undefined, ['vmFactory', 'wrapper']),
+  }),
+
+  useful: createHeadingIds(undefined, ['makeObservable', 'di', 'errors']),
+
   complex: 'complex',
-};
+});

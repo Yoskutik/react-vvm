@@ -14,14 +14,15 @@ const ViewModelContext = createContext<ViewModel | null>(null);
 
 const createComponent = <P, V, R>(
   component: BaseComponent<P, V, R> & { $$typeof?: symbol },
-  vmFactory: (props?: P) => ViewModel | null,
+  vmFactory: (props?: P, initializedDispatcher?: [boolean, (value: boolean) => void]) => ViewModel | null,
   options: TViewOptions<P> = {},
   vmName?: string,
 ) => {
   const isForwardRef = component.$$typeof === Symbol.for('react.forward_ref');
 
   let Component: any = (props: P, ref: R) => {
-    const viewModel = vmFactory(props);
+    const initDispatcher = useState(!vmName);
+    const viewModel = vmFactory(props, initDispatcher);
 
     let element: any = createElement(
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -33,7 +34,7 @@ const createComponent = <P, V, R>(
       element = createElement(ViewModelContext.Provider, { value: viewModel }, element);
     }
 
-    return createElement(configuration.Wrapper!, null, element);
+    return initDispatcher[0] ? createElement(configuration.Wrapper!, null, element) : null;
   };
 
   if (isForwardRef) {
@@ -71,18 +72,22 @@ const useLifeCycle = (
   onMounted: string,
   onUnmounted: string,
   updateCb: (() => void) | null,
-  unmountCb?: () => void,
+  unmountCb?: (() => void) | null,
+  initializedDispatcher?: [boolean, (value: boolean) => void],
 ) => {
   const wasRendered = useRef(false);
 
   hook(() => {
     updateCb && updateCb();
-    wasRendered.current && viewModel[onUpdated] && viewModel[onUpdated]();
+    if (initializedDispatcher![0]) {
+      wasRendered.current && viewModel[onUpdated] && viewModel[onUpdated]();
+      wasRendered.current = true;
+    }
   });
 
   hook(() => {
     viewModel[onMounted] && viewModel[onMounted]();
-    wasRendered.current = true;
+    hook === useLayoutEffect && initializedDispatcher![1](true);
 
     return () => {
       unmountCb && unmountCb();
@@ -111,7 +116,7 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
     ViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FC<P> => (
-    createComponent(ViewComponent, props => {
+    createComponent(ViewComponent, (props, initializedDispatcher) => {
       const viewModel: any = useState(() => configuration.vmFactory!(VM))[0];
       const parentViewModel = useContext(ViewModelContext);
 
@@ -119,12 +124,12 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
         viewModel.d = viewModel.d.filter((it: () => void) => {
           it();
         });
-      });
+      }, initializedDispatcher);
 
       useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, action(() => {
         viewModel.viewProps = props;
         viewModel.parent = parentViewModel;
-      }));
+      }), null, initializedDispatcher);
 
       return viewModel;
     }, options, VM.name || 'Anonymous')
