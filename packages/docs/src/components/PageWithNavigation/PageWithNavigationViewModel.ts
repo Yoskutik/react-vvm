@@ -46,7 +46,7 @@ export class PageWithNavigationViewModel extends ViewModel {
 
     const heading = this.idToHeading[id];
     const { top } = heading.parentElement.getBoundingClientRect();
-    window.scrollBy({ behavior: 'smooth', top: top - 64 });
+    window.scrollBy({ behavior: 'smooth', top: top - 64 - 8 });
     heading.classList.add('animated');
 
     this.animatedInfo = {

@@ -5,7 +5,7 @@ import {
 import { GitHub, Menu, ChevronLeft } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-type LinkProps = {
+type Props = {
   href: string;
   text: string;
 };
@@ -16,7 +16,7 @@ const hoverSx = {
   },
 };
 
-const Link: FC<LinkProps> = ({ href, text }) => {
+const Link: FC<Props> = ({ href, text }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,7 +31,7 @@ const Link: FC<LinkProps> = ({ href, text }) => {
   );
 };
 
-const DrawerLink: FC<LinkProps & { onClick: () => void }> = ({ href, text, onClick }) => {
+const DrawerLink: FC<Props & { onClick: () => void }> = ({ href, text, onClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
 

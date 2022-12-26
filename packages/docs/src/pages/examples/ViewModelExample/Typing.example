@@ -1,5 +1,6 @@
 import { ViewModel } from '@yoskutik/react-vvm';
-import type { SomeViewProps } from './path-to-view-props';
+import type { ParentViewModel } from './ParentViewModel';
+import type { Props } from './path-to-view-props';
 
 // No typings. parent is unknown, viewProps is unknown
 export class SomeViewModel1 extends ViewModel {}
@@ -7,8 +8,8 @@ export class SomeViewModel1 extends ViewModel {}
 // Parent is ParentViewModel, viewProps is unknown
 export class SomeViewModel2 extends ViewModel<ParentViewModel> {}
 
-// Parent is ParentViewModel, viewProps is SomeViewProps
-export class SomeViewModel3 extends ViewModel<ParentViewModel, SomeViewProps> {}
+// Parent is ParentViewModel, viewProps is Props
+export class SomeViewModel3 extends ViewModel<ParentViewModel, Props> {}
 
-// Parent is unknown, viewProps is SomeViewProps
-export class SomeViewModel4 extends ViewModel<unknown, SomeViewProps> {}
+// Parent is unknown, viewProps is Props
+export class SomeViewModel4 extends ViewModel<unknown, Props> {}

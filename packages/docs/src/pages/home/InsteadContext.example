@@ -12,11 +12,11 @@ const SomeChildView = childView<SomeViewModel>()(({ viewModel }) => (
   </div>
 ));
 
-type SomeViewProps = {
+type Props = {
   prop1: number;
 };
 
-const SomeView: FC<SomeViewProps> = view(SomeViewModel)(({ viewModel, prop1 }) => (
+const SomeView = view(SomeViewModel)<Props>(({ viewModel, prop1 }) => (
   <div>
     {/* You can use view models as context */}
     <span>Counter: {viewModel.counter}</span>

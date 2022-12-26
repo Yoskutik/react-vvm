@@ -1,13 +1,12 @@
 import { computed, makeObservable } from 'mobx';
 import { view, childView, ViewModel } from '@yoskutik/react-vvm';
-import { FC } from 'react';
 
-type SomeViewProps = {
+type Props = {
   prop1: number;
   prop2: string;
 }
 
-export class SomeViewModel extends ViewModel<unknown, SomeViewProps> {
+export class SomeViewModel extends ViewModel<unknown, Props> {
   @computed get prop1() {
     return this.viewProps.prop1;
   }
@@ -15,11 +14,7 @@ export class SomeViewModel extends ViewModel<unknown, SomeViewProps> {
   constructor() {
     super();
     makeObservable(this);
-  }
 
-  // It's better to add reactions in the onViewMounted hook, because parent and viewProps are undefined in the
-  // constructor
-  protected onViewMounted() {
     // This autorun will be called every time the view gets any new prop, even if the prop1 didn't change
     this.autorun(() => {
       console.log(this.viewProps.prop1);
@@ -47,6 +42,6 @@ const SomeChildView = childView<SomeViewModel>()(({ viewModel }) => (
   </div>
 ));
 
-const SomeView: FC<SomeViewProps> = view(SomeViewModel)(() => (
+const SomeView = view(SomeViewModel)<Props>(() => (
   <SomeChildView />
 ));

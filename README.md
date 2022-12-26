@@ -1,8 +1,9 @@
 # [React VVM](https://yoskutik.github.io/react-vvm/)
+### An implementation of MVVM for React applications with MobX
 
-![Weight](https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/weight.svg)
-![ES6](https://img.shields.io/badge/EcmaScript-v.6-blue)
 [![Version](https://img.shields.io/npm/v/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
+[![ES6](https://img.shields.io/badge/EcmaScript-v.6-blue)](https://github.com/yoskutik/react-vvm)
+[![Weight](https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/weight.svg)](https://github.com/yoskutik/react-vvm)
 [![license](https://img.shields.io/npm/l/@yoskutik/react-vvm)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 [![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/@yoskutik/react-vvm?label=Vulnerabilities)](https://www.npmjs.com/package/@yoskutik/react-vvm)
 ![Jest coverage](https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/coverage-jest%20coverage.svg)
@@ -33,7 +34,7 @@ import { action, observable, makeObservable } from 'mobx';
 import { view, ViewModel } from '@yoskutik/react-vvm';
 
 class CounterViewModel extends ViewModel {
-  @observalbe count = 0;
+  @observable count = 0;
 
   constructor() {
     super();
@@ -64,4 +65,4 @@ of applications with React VVM
 
 ### License
 
-React VVM is [MIT licensed](./LICENSE).
+React VVM is [MIT licensed](https://github.com/Yoskutik/react-vvm/tree/master/LICENSE.txt).

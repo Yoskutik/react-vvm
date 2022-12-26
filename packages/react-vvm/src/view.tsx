@@ -1,6 +1,6 @@
 import {
-  createContext, memo, useContext, useState, FC, createElement, useLayoutEffect, useRef, forwardRef,
-  ForwardedRef, ReactElement, useEffect, PureComponent,
+  createContext, memo, useContext, useState, FC, createElement, useLayoutEffect, useRef, useEffect, PureComponent,
+  RefAttributes, forwardRef,
 } from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
@@ -8,21 +8,21 @@ import { ViewModel } from './ViewModel';
 import { Constructable } from './types';
 import { configuration } from './configure';
 
-declare const isDev: boolean;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare const __DEV__: boolean;
 
 const ViewModelContext = createContext<ViewModel | null>(null);
 
 const createComponent = <P, V, R>(
-  component: BaseComponent<P, V, R> & { $$typeof?: symbol },
-  vmFactory: (props?: P, initializedDispatcher?: [boolean, (value: boolean) => void]) => ViewModel | null,
+  component: BaseComponent<P, V, R>,
+  vmFactory: (props?: P) => ViewModel | null,
   options: TViewOptions<P> = {},
   vmName?: string,
 ) => {
-  const isForwardRef = component.$$typeof === Symbol.for('react.forward_ref');
+  const isForwardRef = (component as any).$$typeof === Symbol.for('react.forward_ref');
 
-  let Component: any = (props: P, ref: R) => {
-    const initDispatcher = useState(!vmName);
-    const viewModel = vmFactory(props, initDispatcher);
+  let Component: any = (props: P, ref: any) => {
+    const viewModel = vmFactory(props);
 
     let element: any = createElement(
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -34,7 +34,7 @@ const createComponent = <P, V, R>(
       element = createElement(ViewModelContext.Provider, { value: viewModel }, element);
     }
 
-    return initDispatcher[0] ? createElement(configuration.Wrapper!, null, element) : null;
+    return createElement(configuration.Wrapper, null, element);
   };
 
   if (isForwardRef) {
@@ -43,7 +43,7 @@ const createComponent = <P, V, R>(
 
   Component = memo(Component, options.propsAreEqual);
 
-  if (isDev) {
+  if (__DEV__) {
     Component.displayName = `${!vmName ? 'Child' : ''}View${vmName ? `@${vmName}` : ''}`;
   }
 
@@ -55,7 +55,9 @@ type TViewOptions<T> = {
   propsAreEqual?: (prevProps: Readonly<T>, nextProps: Readonly<T>) => boolean;
 };
 
-type BaseComponent<P, V, R> = (props: P & { readonly viewModel: V }, ref: ForwardedRef<R>) => ReactElement | null;
+type FCWithRef<P, R> = FC<P & (R extends HTMLElement ? RefAttributes<R> : unknown)>;
+
+type BaseComponent<P, V, R> = FCWithRef<P & { viewModel: V }, R>;
 
 const onViewMounted = 'onViewMounted';
 const onViewUpdated = 'onViewUpdated';
@@ -72,22 +74,21 @@ const useLifeCycle = (
   onMounted: string,
   onUnmounted: string,
   updateCb: (() => void) | null,
-  unmountCb?: (() => void) | null,
-  initializedDispatcher?: [boolean, (value: boolean) => void],
+  unmountCb?: () => void,
 ) => {
   const wasRendered = useRef(false);
 
   hook(() => {
-    updateCb && updateCb();
-    if (initializedDispatcher![0]) {
-      wasRendered.current && viewModel[onUpdated] && viewModel[onUpdated]();
-      wasRendered.current = true;
+    if (wasRendered.current) {
+      updateCb && updateCb();
+      viewModel[onUpdated] && viewModel[onUpdated]();
     }
+
+    wasRendered.current = true;
   });
 
   hook(() => {
     viewModel[onMounted] && viewModel[onMounted]();
-    hook === useLayoutEffect && initializedDispatcher![1](true);
 
     return () => {
       unmountCb && unmountCb();
@@ -102,34 +103,42 @@ const useLifeCycle = (
  * @param VM - ViewModel class.
  *
  * @example
- * type SomeViewProps = {
+ * type Props = {
  *   prop1: number;
  *   prop2: string;
  * }
  *
- * const SomeView: FC<SomeViewProps> = view(SomeViewModel)(({ viewModel, prop1, prop2 }) => (
+ * const SomeView = view(SomeViewModel)<Props>(({ viewModel, prop1, prop2 }) => (
  *   JSX here
  * ));
  */
 export const view = <V extends ViewModel>(VM: Constructable<V>) => (
-  <P, R>(
+  <P, R extends HTMLElement | unknown = unknown>(
     ViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
-  ): FC<P> => (
-    createComponent(ViewComponent, (props, initializedDispatcher) => {
-      const viewModel: any = useState(() => configuration.vmFactory!(VM))[0];
+  ): FCWithRef<P, R> => (
+    createComponent(ViewComponent, props => {
       const parentViewModel = useContext(ViewModelContext);
+      const viewModel: any = useState(() => {
+        const proto = VM.prototype;
+        proto.parent = parentViewModel;
+        proto.viewProps = props;
+        const vm = configuration.vmFactory(VM);
+        delete proto.parent;
+        delete proto.viewProps;
+        return vm;
+      })[0];
 
       useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, null, () => {
         viewModel.d = viewModel.d.filter((it: () => void) => {
           it();
         });
-      }, initializedDispatcher);
+      });
 
       useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, action(() => {
         viewModel.viewProps = props;
         viewModel.parent = parentViewModel;
-      }), null, initializedDispatcher);
+      }));
 
       return viewModel;
     }, options, VM.name || 'Anonymous')
@@ -141,10 +150,10 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
  * uses one. ChildViews are memoized with {@link React.memo}.
  */
 export const childView = <V extends ViewModel>() => (
-  <P, R>(
+  <P, R extends HTMLElement | unknown = unknown>(
     ChildViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
-  ): FC<P> => (
+  ): FCWithRef<P, R> => (
     createComponent(ChildViewComponent, () => useContext(ViewModelContext), options)
   )
 );

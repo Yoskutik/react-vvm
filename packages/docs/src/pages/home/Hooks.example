@@ -2,15 +2,24 @@ import { view, ViewModel } from '@yoskutik/react-vvm';
 
 class SomeViewModel extends ViewModel {
   protected onViewMountedSync() {
-    console.log('This function can be used instead of useLayoutEffect(() => {...}, [])');
+    // This function can be used instead of
+    // useLayoutEffect(() => {
+    //   ...
+    // }, []);
   }
 
   protected onViewUnmounted() {
-    console.log('This function can be used instead of returned function in useEffect(() => {...}, [])');
+    // This function can be used instead of
+    // useEffect(() => () => {
+    //   ...
+    // }, []);
   }
 
   protected onViewUpdated() {
-    console.log('This function can be partially used instead of useEffect(() => {...})');
+    // This function can be used partially instead of
+    // useEffect(() => {
+    //   ...
+    // });
   }
 }
 

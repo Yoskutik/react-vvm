@@ -1,9 +1,0 @@
-import React, { forwardRef } from 'react';
-import { view, ViewWithRef } from '@yoskutik/react-vvm';
-import { SomeViewModel } from './path-to-view-model';
-
-export const View = view(SomeViewModel)(
-  forwardRef(({ viewModel }, ref) => (
-    <div ref={ref} />
-  ))
-) as ViewWithRef<HTMLDivElement>;

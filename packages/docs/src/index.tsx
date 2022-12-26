@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { StrictMode } from 'react';
 import { makeObservable } from 'mobx';
 import { createRoot } from 'react-dom/client';
 import { PrismLight } from 'react-syntax-highlighter';
@@ -11,17 +10,11 @@ import { App } from './layout';
 PrismLight.registerLanguage('tsx', tsx);
 
 configure({
-  vmFactory: VM => {
-    const viewModel = new VM();
-    makeObservable(viewModel);
-    return viewModel;
-  },
+  vmFactory: VM => makeObservable(new VM()),
 });
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <ThemeProvider theme={responsiveFontSizes(createTheme())}>
-      <App />
-    </ThemeProvider>
-  </StrictMode>,
+  <ThemeProvider theme={responsiveFontSizes(createTheme())}>
+    <App />
+  </ThemeProvider>,
 );

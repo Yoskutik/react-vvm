@@ -1,4 +1,3 @@
-import { VFC } from 'react';
 import { computed, action } from 'mobx';
 import { view, ViewModel } from '@yoskutik/react-vvm';
 import { VBox } from '@components';
@@ -30,7 +29,7 @@ class ListViewModel extends ViewModel<AppViewModel, ListProps> {
   };
 }
 
-export const List: VFC<ListProps> = view(ListViewModel)(({ viewModel }) => (
+export const List = view(ListViewModel)<ListProps>(({ viewModel }) => (
   <VBox cls="list">
     {viewModel.filteredData.length ? (
       viewModel.filteredData.map(it => (

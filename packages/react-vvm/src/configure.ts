@@ -3,8 +3,8 @@ import { Constructable } from './types';
 import { ViewModel } from './ViewModel';
 
 type TConfiguration = {
-  vmFactory?: <T extends ViewModel>(VM: Constructable<T>) => T,
-  Wrapper?: FC<{ children: ReactNode }> | ComponentClass<{ children: ReactNode }>,
+  vmFactory: <T extends ViewModel>(VM: Constructable<T>) => T,
+  Wrapper: FC<{ children: ReactNode }> | ComponentClass<{ children: ReactNode }>,
 };
 
 export const configuration: TConfiguration = {
@@ -12,6 +12,6 @@ export const configuration: TConfiguration = {
   Wrapper: Fragment,
 };
 
-export const configure = (config: TConfiguration) => {
+export const configure = (config: Partial<TConfiguration>) => {
   Object.assign(configuration, config);
 };

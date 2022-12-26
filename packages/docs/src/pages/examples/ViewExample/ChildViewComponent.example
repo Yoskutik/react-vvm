@@ -13,4 +13,4 @@ export class SomeChildView extends ChildViewComponent<SomeViewModel, Props> {
 }
 
 // But if you want to make it act as view, you can wrap it with the view function
-export default view(SomeViewModel)((props: Props) => <SomeChildView {...props} />);
+export default view(SomeViewModel)<Props>(props => <SomeChildView {...props} />);
