@@ -4,12 +4,12 @@ import { autorun, makeObservable, observable, reaction } from 'mobx';
 type TDisposer = () => void;
 
 /** A base class for view models */
-export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unknown> {
+export abstract class ViewModel<V extends ViewModel | null | unknown = unknown, P = unknown> {
   /** An array of disposers which are called after the view becomes unmounted */
   private d: TDisposer[] = [];
 
   /** Properties that were given to a view. This object is updated every time the view is rendered with the new props */
-  readonly viewProps: Readonly<P> | undefined = undefined;
+  readonly viewProps: Readonly<P>;
 
   /**
    * A view model instance which is defined in a view that contains the view of current view model.
@@ -25,9 +25,11 @@ export abstract class ViewModel<V extends ViewModel | unknown = unknown, P = unk
    *   </div>
    * </View1>
    */
-  readonly parent: V | undefined = undefined;
+  readonly parent: V;
 
   constructor() {
+    this.viewProps = (this as any).viewProps;
+    this.parent = (this as any).parent;
     // MobX 4 and MobX5 don't have makeObservable
     makeObservable && makeObservable(this);
   }
@@ -96,9 +98,7 @@ const prototype = ViewModel.prototype as any;
   };
 });
 
-['viewProps', 'parent'].forEach(field => {
-  (Reflect as any).decorate([
-    observable.ref,
-    (Reflect as any).metadata('design:type', Object),
-  ], prototype, field);
-});
+(Reflect as any).decorate([
+  observable.ref,
+  (Reflect as any).metadata('design:type', Object),
+], prototype, 'viewProps');

@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { view } from '@yoskutik/react-vvm';
 import { SomeViewModel } from './path-to-view-model';
 
-export type SomeViewProps = {
+export type Props = {
   prop1: number;
   prop2?: string;
 };
 
-export const SomeView: FC<SomeViewProps> = view(SomeViewModel)(({ viewModel, prop1, prop2 }) => (
+export const SomeView = view(SomeViewModel)<Props>(({ viewModel, prop1, prop2 }) => (
   <div>
     {viewModel.field1}
     {prop1}

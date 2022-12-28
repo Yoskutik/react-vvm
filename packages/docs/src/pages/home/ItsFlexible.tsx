@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Box, Link, Typography } from '@mui/material';
-import { Code } from '@components';
+import { Box, Typography } from '@mui/material';
+import { Code, TextLink } from '@components';
 import { Block } from './components';
 
 export const ItsFlexible: FC = () => (
@@ -19,10 +19,8 @@ export const ItsFlexible: FC = () => (
         For <Code>mobx-react</Code> the available versions are <b>6 and 7</b>.
       </Typography>
       <Typography component="p" sx={{ mt: 2, fontSize: '1.2rem' }}>
-        For <Code>mobx</Code> the available versions are <b>4, 5 and 6</b>. But, please, see the {' '}
-        <Link href="#/getting-started">
-          Getting started
-        </Link>
+        For <Code>mobx</Code> the available versions are <b>4, 5 and 6</b>. But, please, see the
+        <TextLink href="#/getting-started" text="Getting started" />
         {' '} section before using the 4<sup>th</sup> or 5<sup>th</sup> versions.
       </Typography>
     </Box>

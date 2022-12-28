@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { view, childView } from '@yoskutik/react-vvm';
 import { SomeViewModel } from './path-to-view-model';
 
@@ -24,9 +24,9 @@ const propsAreEqual = (prevProps: Props, nextProps: Props) => {
 };
 
 // And this is how you can change propsAreEqual function for the memo
-export const View3: FC<Props> = view(SomeViewModel)(({ viewModel }) => (
+export const View3 = view(SomeViewModel)<Props>(({ viewModel }) => (
   <div />
 ), { propsAreEqual });
-export const ChildView3: FC<Props> = childView<SomeViewModel>()(({ viewModel }) => (
+export const ChildView3 = childView<SomeViewModel>()<Props>(({ viewModel }) => (
   <div />
 ), { propsAreEqual });

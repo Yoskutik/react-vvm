@@ -12,7 +12,7 @@ const Block = styled(Box)`
   }
 `;
 
-type HighlighterProps = {
+type Props = {
   code: string;
   forceShowCopy?: boolean;
   language?: string
@@ -20,7 +20,7 @@ type HighlighterProps = {
   sx?: SxProps;
 };
 
-export const Highlighter: FC<HighlighterProps> = ({ code, sx, style, forceShowCopy, language = 'tsx' }) => {
+export const Highlighter: FC<Props> = ({ code, sx, style, forceShowCopy, language = 'tsx' }) => {
   const [showSnack, setShowSnack] = useState(false);
 
   const onCopyClick = () => {
@@ -30,13 +30,13 @@ export const Highlighter: FC<HighlighterProps> = ({ code, sx, style, forceShowCo
   return (
     <Block sx={sx}>
       <PrismLight
-        customStyle={{ borderRadius: '0.4rem', boxShadow: '0 1px 4px 0 rgba(0,0,0,0.1)', ...style }}
+        customStyle={{ borderRadius: '0.4rem', boxShadow: '0 1px 4px 0 rgba(0,0,0,0.1)', margin: 0, ...style }}
         language={language}
         style={dracula}
       >
         {code}
       </PrismLight>
-      {(forceShowCopy || code.includes('\n')) && (
+      {(forceShowCopy === undefined ? code.includes('\n') : forceShowCopy) && (
         <IconButton
           sx={{ position: 'absolute', top: 7, right: 7, opacity: 0, transitionProperty: 'opacity' }}
           className="highlighter-copy-button"

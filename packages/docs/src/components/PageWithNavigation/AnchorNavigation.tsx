@@ -1,9 +1,8 @@
-import { FC } from 'react';
-import { Box, Button, Toolbar } from '@mui/material';
+import { Box, Button, Grid, Toolbar } from '@mui/material';
 import { childView } from '@yoskutik/react-vvm';
 import { PageWithNavigationViewModel } from './PageWithNavigationViewModel';
 
-const Link: FC<{ text: string, id: string }> = childView<PageWithNavigationViewModel>()(({ text, id, viewModel }) => (
+const Link = childView<PageWithNavigationViewModel>()<{ text: string, id: string }>(({ text, id, viewModel }) => (
   <Button
     color={viewModel.firstVisibleHeader === id ? 'primary' : 'inherit'}
     style={{
@@ -25,13 +24,12 @@ const Link: FC<{ text: string, id: string }> = childView<PageWithNavigationViewM
 ));
 
 export const AnchorNavigation = childView<PageWithNavigationViewModel>()(({ viewModel }) => (
-  <Box
+  <Grid
     sx={{
       borderRight: '1px solid rgba(0, 0, 0, 0.12)',
       display: { xs: 'none', sm: 'block' },
       width: { sm: 200, md: 250 },
       backgroundColor: '#fff',
-      boxSizing: 'border-box',
       maxHeight: '100vh',
       position: 'sticky',
       flexShrink: 0,
@@ -47,5 +45,5 @@ export const AnchorNavigation = childView<PageWithNavigationViewModel>()(({ view
         </Box>
       ))}
     </Box>
-  </Box>
+  </Grid>
 ));

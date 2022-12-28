@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { configure as configureVVM, view, ViewModel } from '@yoskutik/react-vvm';
 import { act, cleanup, render } from '@testing-library/react';
 import { makeObservable, observable, configure as configureMobx, observe } from 'mobx';
@@ -28,7 +27,7 @@ describe('Common use of ViewModel with reactions', () => {
       onePropHasChanged = jest.fn();
     }
 
-    const View: FC<ViewProps> = view(SomeViewModel)(({ prop1, prop2 }) => (
+    const View = view(SomeViewModel)<ViewProps>(({ prop1, prop2 }) => (
       <div>{prop1 + prop2}</div>
     ));
 

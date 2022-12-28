@@ -1,7 +1,8 @@
 import { useRef, FC, forwardRef, createRef } from 'react';
-import { childView, ChildViewComponent, configure, view, ViewModel, ViewWithRef } from '@yoskutik/react-vvm';
+import { childView, ChildViewComponent, configure, view, ViewModel } from '@yoskutik/react-vvm';
 import { act, render, screen } from '@testing-library/react';
 import { configure as configureMobx, makeObservable, observable } from 'mobx';
+import { Constructable } from '../../src/types';
 
 configureMobx({
   enforceActions: 'never',
@@ -35,16 +36,16 @@ describe('Common use of View and ChildView', () => {
     });
   };
 
-  type PropsEqualityViewProps = {
+  type EqualityCheckProps = {
     a: number;
     b: number;
   };
 
-  const propsAreEqual = (prevProps: PropsEqualityViewProps, nextProps: PropsEqualityViewProps) => (
+  const propsAreEqual = (prevProps: EqualityCheckProps, nextProps: EqualityCheckProps) => (
     prevProps.a + prevProps.b === nextProps.a + nextProps.b
   );
 
-  const testPropsEqualityMechanism = (Component: FC<PropsEqualityViewProps>) => {
+  const testPropsEqualityMechanism = (Component: FC<EqualityCheckProps>) => {
     const { rerender } = render(<Component a={2} b={3} />);
     expect(screen.getByRole('spinbutton', { name: 'Render count' })).toHaveValue(1);
 
@@ -80,7 +81,7 @@ describe('Common use of View and ChildView', () => {
     });
 
     test('Memo\'s propsAreEqual', () => {
-      const View: FC<PropsEqualityViewProps> = view(SomeViewModel)(({ a, b }) => {
+      const View = view(SomeViewModel)<EqualityCheckProps>(({ a, b }) => {
         const renderCount = useRef(0);
         renderCount.current++;
 
@@ -96,18 +97,28 @@ describe('Common use of View and ChildView', () => {
     });
 
     test('ForwardRef', () => {
-      const View = view(SomeViewModel)(
+      const View = view(SomeViewModel)<unknown, HTMLDivElement>(
         forwardRef((_, ref) => (
           <div ref={ref}>
             Component
           </div>
         )),
-      ) as ViewWithRef<HTMLDivElement>;
+      );
 
       const ref = createRef<HTMLDivElement>();
       render(<View ref={ref} />);
 
       expect(screen.getByText('Component')).toEqual(ref.current);
+    });
+
+    test('parent and viewProps are defined', () => {
+      const View = view(SomeViewModel)<{ a: number }>(({ viewModel }) => {
+        expect(viewModel.parent).toBeNull();
+        expect(viewModel.viewProps).toEqual({ a: 1 });
+        return null;
+      });
+
+      render(<View a={1} />);
     });
   });
 
@@ -135,7 +146,7 @@ describe('Common use of View and ChildView', () => {
     });
 
     test('Memo\'s propsAreEqual', () => {
-      const ChildView: FC<PropsEqualityViewProps> = childView<SomeViewModel>()(({ a, b }) => {
+      const ChildView = childView<SomeViewModel>()<EqualityCheckProps>(({ a, b }) => {
         const renderCount = useRef(0);
         renderCount.current++;
 
@@ -147,7 +158,7 @@ describe('Common use of View and ChildView', () => {
         );
       }, { propsAreEqual });
 
-      const View: FC<PropsEqualityViewProps> = view(SomeViewModel)(({ a, b }) => (
+      const View = view(SomeViewModel)<EqualityCheckProps>(({ a, b }) => (
         <ChildView a={a} b={b}/>
       ));
 
@@ -155,19 +166,19 @@ describe('Common use of View and ChildView', () => {
     });
 
     test('ForwardRef', () => {
-      const ChildView = childView<SomeViewModel>()(
+      const ChildView = childView<SomeViewModel>()<unknown, HTMLDivElement>(
         forwardRef((_, ref) => (
           <div ref={ref}>
             Component
           </div>
         )),
-      ) as ViewWithRef<HTMLDivElement>;
+      );
 
-      const View = view(SomeViewModel)(
+      const View = view(SomeViewModel)<unknown, HTMLDivElement>(
         forwardRef((_, ref) => (
           <ChildView ref={ref}/>
         )),
-      ) as ViewWithRef<HTMLDivElement>;
+      );
 
       const ref = createRef<HTMLDivElement>();
       render(<View ref={ref} />);
@@ -191,7 +202,7 @@ describe('Common use of View and ChildView', () => {
 
   describe('Production and development difference', () => {
     test('Production', () => {
-      (global as any).isDev = false;
+      (global as any).__DEV__ = false;
       const ChildView = childView<SomeViewModel>()(() => <div />);
       const View = view(SomeViewModel)(() => <ChildView />);
       expect(ChildView.displayName).not.toEqual('ChildView');
@@ -200,7 +211,7 @@ describe('Common use of View and ChildView', () => {
 
     describe('Development', () => {
       test('Named view model', () => {
-        (global as any).isDev = true;
+        (global as any).__DEV__ = true;
         const ChildView = childView<SomeViewModel>()(() => <div />);
         const View = view(SomeViewModel)(() => <ChildView />);
         expect(ChildView.displayName).toEqual('ChildView');
@@ -208,10 +219,10 @@ describe('Common use of View and ChildView', () => {
       });
 
       test('Anonymous view model', () => {
-        (global as any).isDev = true;
+        (global as any).__DEV__ = true;
         const AnonymousViewModel = (() => (
           class extends ViewModel {}
-        ))();
+        ) as Constructable<ViewModel>)();
         const View = view(AnonymousViewModel)(() => <div />);
         expect(View.displayName).toEqual('View@Anonymous');
       });

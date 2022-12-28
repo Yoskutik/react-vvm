@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from 'react';
+import { CSSProperties, FC, ReactNode } from 'react';
 
 type FlexBoxProps = {
   style?: CSSProperties;
@@ -8,6 +8,7 @@ type FlexBoxProps = {
   align?: 'start' | 'center',
   onFocus?: () => void;
   onBlur?: () => void;
+  children: ReactNode;
 };
 
 const Box: FC<FlexBoxProps & { type: 'v' | 'h' }> = ({

@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
-import { Box, SxProps, Typography, Link } from '@mui/material';
-import { headings as examplesHeadings } from '@pages/examples/headings';
+import { Box, Grid, SxProps, Typography } from '@mui/material';
+import { TextLink } from '@components';
 import { Features } from './Features';
 import { Block, CodeExample } from './components';
 import { ItsFlexible } from './ItsFlexible';
@@ -10,21 +10,10 @@ import hooksExample from './Hooks.example';
 
 const Badges: FC = () => (
   <Box sx={{ backgroundColor: 'rgba(0,0,0,0.03)' }}>
-    <Box
-      sx={{
-        justifyContent: 'center',
-        maxWidth: '100%',
-        flexWrap: 'wrap',
-        display: 'flex',
-        width: '1200px',
-        m: '0 auto',
-        padding: 2,
-        gap: 1,
-      }}
-    >
-      <img src="https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/weight.svg" alt="Weight" />
+    <Grid justifyContent="center" gap={1} container sx={{ width: '1200px', m: '0 auto', p: 2, maxWidth: '100%' }}>
       <img src="https://img.shields.io/npm/v/@yoskutik/react-vvm" alt="NPM version" />
       <img src="https://img.shields.io/badge/EcmaScript-v.6-blue" alt="EcmaScript 6" />
+      <img src="https://raw.githubusercontent.com/Yoskutik/react-vvm/master/badges/weight.svg" alt="Weight" />
       <img src="https://img.shields.io/npm/l/@yoskutik/react-vvm" alt="License" />
       <img
         src="https://img.shields.io/snyk/vulnerabilities/npm/@yoskutik/react-vvm?label=Vulnerabilities"
@@ -35,7 +24,7 @@ const Badges: FC = () => (
         alt="Coverage"
       />
       <img src="https://github.com/Yoskutik/react-vvm/actions/workflows/build.yml/badge.svg" alt="Build" />
-    </Box>
+    </Grid>
   </Box>
 );
 
@@ -51,15 +40,12 @@ const Home: FC = memo(() => (
     <Box>
       <Block style={{ height: '280px', alignItems: 'center', padding: '1rem 1rem 3.2rem' }}>
         <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h2" component="h2">
+          <Typography variant="h2" component="h1">
             React VVM
           </Typography>
-          <Typography variant="h5" component="h5">
-            Using MobX has never been so convenient
+          <Typography variant="h5" component="h2" sx={{ mt: 2 }}>
+            An implementation of MVVM for React applications with MobX
           </Typography>
-          <small>
-            In fact, this is just a value judgment 😅
-          </small>
         </Box>
       </Block>
 
@@ -92,16 +78,10 @@ const Home: FC = memo(() => (
           </Typography>
           <Typography component="p" sx={{ mt: 2, fontSize: '1.2rem' }}>
             You can check the
-            {' '}
-            <Link href="#/examples">
-              examples page
-            </Link>
+            <TextLink href="#/examples" text="examples page" />
             {' '}
             and see some other
-            {' '}
-            <Link href={`#/examples?heading=${examplesHeadings.useful.main}`}>
-              useful cases
-            </Link>!
+            <TextLink id="useful-examples" text="useful cases" />!
           </Typography>
         </Box>
       </Block>

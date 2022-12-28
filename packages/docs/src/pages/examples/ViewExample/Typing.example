@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { view, childView } from '@yoskutik/react-vvm';
 import { SomeViewModel } from './path-to-view-model';
 
@@ -15,11 +15,11 @@ export type Props = {
   prop2?: string; // An optional prop
 }
 
-export const View2: FC<Props> = view(SomeViewModel)(({ viewModel, prop1, prop2 }) => (
+export const View2 = view(SomeViewModel)<Props>(({ viewModel, prop1, prop2 }) => (
   <div />
 ));
 
-export const ChildView2: FC<Props> = childView<SomeViewModel>()(({ viewModel, prop1, prop2 }) => (
+export const ChildView = childView<SomeViewModel>()<Props>(({ viewModel, prop1, prop2 }) => (
   <div />
 ));
 

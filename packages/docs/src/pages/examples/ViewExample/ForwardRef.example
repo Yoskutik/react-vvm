@@ -1,14 +1,15 @@
 import React, { forwardRef } from 'react';
-import { view, childView, ViewWithRef } from '@yoskutik/react-vvm';
+import { view, childView } from '@yoskutik/react-vvm';
 import { SomeViewModel } from './path-to-view-model';
 
 // Only ref with no props
-export const View1: ViewWithRef<HTMLDivElement> = view(SomeViewModel)(
+export const View1 = view(SomeViewModel)<unknown, HTMLDivElement>(
   forwardRef(({ viewModel }, ref) => (
     <div ref={ref} />
   ))
 );
-export const ChildView1: ViewWithRef<HTMLDivElement> = childView<SomeViewModel>()(
+
+export const ChildView1 = childView<SomeViewModel>()<unknown, HTMLDivElement>(
   forwardRef(({ viewModel }, ref) => (
     <div ref={ref} />
   ))
@@ -20,12 +21,13 @@ type Props = {
 };
 
 // With props
-export const View2: ViewWithRef<HTMLDivElement, Props> = view(SomeViewModel)(
+export const View2 = view(SomeViewModel)<Props, HTMLDivElement>(
   forwardRef(({ viewModel, prop1 }, ref) => (
     <div ref={ref} />
   ))
 );
-export const ChildView2: ViewWithRef<HTMLDivElement, Props> = childView<SomeViewModel>()(
+
+export const ChildView2 = childView<SomeViewModel>()<Props, HTMLDivElement>(
   forwardRef(({ viewModel, prop1 }, ref) => (
     <div ref={ref} />
   ))

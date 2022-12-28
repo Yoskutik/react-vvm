@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { configure, view, ViewModel } from '@yoskutik/react-vvm';
 import { render } from '@testing-library/react/pure';
 import '@testing-library/react/dont-cleanup-after-each';
@@ -27,7 +26,7 @@ describe('Common use of ViewModel', () => {
     onViewUpdatedSync = jest.fn();
   }
 
-  const View: FC<ViewProps> = view(SomeViewModel)(({ prop1 }) => (
+  const View = view(SomeViewModel)<ViewProps>(({ prop1 }) => (
     <div>{prop1}</div>
   ));
 
@@ -64,29 +63,45 @@ describe('Common use of ViewModel', () => {
     });
   });
 
-  test('ViewProps equality', () => {
-    const { rerender } = render(<View prop1={0} />);
+  describe('Fields', () => {
+    test('viewProps equality', () => {
+      const { rerender } = render(<View prop1={0} />);
 
-    const checkProps = (props: ViewProps, shouldRerender = true) => {
-      shouldRerender && rerender(<View {...props} />);
-      expect(viewModel.viewProps).toEqual(props);
-    };
+      const checkProps = (props: ViewProps, shouldRerender = true) => {
+        shouldRerender && rerender(<View {...props} />);
+        expect(viewModel.viewProps).toEqual(props);
+      };
 
-    checkProps({ prop1: 0 }, false);
-    checkProps({ prop1: 1 });
-    checkProps({ prop1: 1, prop2: 3 });
-    checkProps({ prop1: 1 });
-  });
+      checkProps({ prop1: 0 }, false);
+      checkProps({ prop1: 1 });
+      checkProps({ prop1: 1, prop2: 3 });
+      checkProps({ prop1: 1 });
+    });
 
-  test('Parent equality', () => {
-    class ChildViewModel extends ViewModel<SomeViewModel> {}
+    test('parent equality', () => {
+      class ChildViewModel extends ViewModel<SomeViewModel> {}
 
-    const ChildView = view(ChildViewModel)(() => <div />);
+      const ChildView = view(ChildViewModel)(() => <div />);
 
-    const SomeView = view(SomeViewModel)(() => <ChildView />);
+      const SomeView = view(SomeViewModel)(() => <ChildView />);
 
-    render(<SomeView />);
+      render(<SomeView />);
 
-    expect(viewModel.parent).toBeInstanceOf(SomeViewModel);
+      expect(viewModel.parent).toBeInstanceOf(SomeViewModel);
+    });
+
+    test('Fields are available in the constructor', () => {
+      class SomeViewModel2 extends ViewModel<unknown, ViewProps> {
+        constructor() {
+          super();
+          expect(this.parent).toBeNull();
+          expect(this.viewProps).toEqual({ prop1: 1 });
+        }
+      }
+
+      const View2 = view(SomeViewModel2)<ViewProps>(() => <div />);
+
+      render(<View2 prop1={1} />);
+    });
   });
 });

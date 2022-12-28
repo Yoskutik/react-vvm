@@ -22,7 +22,7 @@ export default [false, true].map(isDev => ({
     }),
     define({
       replacements: {
-        isDev: JSON.stringify(isDev),
+        __DEV__: JSON.stringify(isDev),
       },
     }),
     ...(isDev ? [] : [terser()])

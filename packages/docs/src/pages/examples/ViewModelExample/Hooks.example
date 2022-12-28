@@ -1,8 +1,7 @@
 import { ViewModel } from '@yoskutik/react-vvm';
-import type { SomeViewProps } from './path-to-view-props';
 
 // Hooks can be sync and async. Also, they can be decorated with @action or other decorators
-export class SomeViewModel extends ViewModel<unknown, SomeViewProps> {
+export class SomeViewModel extends ViewModel {
   protected onViewMounted() {
     console.log('View has been mounted. This function is called in the useEffect hook');
   }

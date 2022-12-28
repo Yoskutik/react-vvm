@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { injectable } from 'tsyringe';
 import { computed } from 'mobx';
 import { childView, view, ViewModel } from '@yoskutik/react-vvm';
@@ -23,7 +22,7 @@ class ArticlesViewModel extends ViewModel<AppViewModel, ArticleProps> {
   onRead = () => this.articlesService.read(this.viewProps.data);
 }
 
-const Article: FC<ArticleProps> = view(ArticlesViewModel)(({ viewModel, data }) => (
+const Article = view(ArticlesViewModel)<ArticleProps>(({ viewModel, data }) => (
   <VBox cls={`article ${viewModel.read ? 'read' : ''}`} key={Math.random()} justify="space-between">
     <h2 className="article__title">{data.title}</h2>
     <button className="article__btn" onClick={viewModel.onRead}>
