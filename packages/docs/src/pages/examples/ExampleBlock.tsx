@@ -40,11 +40,13 @@ export const ExampleBlock: FC<Props> = ({ example, title, children }) => {
       forcedLevel={3}
       title={title}
     >
-      <Link sx={{ cursor: 'pointer' }} onClick={() => toggleVisibility()}>
-        {isExpanded ? 'Hide' : 'Show'} example
-      </Link>
+      <div>
+        <Link sx={{ cursor: 'pointer' }} onClick={() => toggleVisibility()}>
+          {isExpanded ? 'Hide' : 'Show'} example
+        </Link>
+      </div>
       <Box
-        style={{ transitionDuration: `${codeMaxHeight * 0.8}ms`, maxHeight, marginBottom: isExpanded ? 0 : -16 }}
+        style={{ transitionDuration: `${codeMaxHeight}ms`, maxHeight, marginBottom: isExpanded ? 0 : -16 }}
         onTransitionEnd={onTransitionEnd}
         ref={codeRef}
         sx={{
