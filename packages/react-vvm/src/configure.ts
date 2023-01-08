@@ -1,6 +1,6 @@
 import { FC, ComponentClass, ReactNode, Fragment } from 'react';
 import { Constructable } from './types';
-import { ViewModel } from './ViewModel';
+import { ViewModel, ASSIGN } from './ViewModel';
 
 type TConfiguration = {
   vmFactory: <T extends ViewModel>(VM: Constructable<T>) => T,
@@ -13,5 +13,5 @@ export const configuration: TConfiguration = {
 };
 
 export const configure = (config: Partial<TConfiguration>) => {
-  Object.assign(configuration, config);
+  ASSIGN(configuration, config);
 };

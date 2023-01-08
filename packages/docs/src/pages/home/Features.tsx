@@ -34,7 +34,7 @@ export const Features: FC = () => (
         The library not only can be easily used with TypeScript, it is actually recommended for use with TypeScript!
       </FeatureCard>
       <FeatureCard title="Lightweight">
-        The size of the library is less than 2 Kb.
+        The size of the library is less than 1.6 Kb.
       </FeatureCard>
       <FeatureCard title="Easy to extend">
         The library allows you to create easily extensible and scalable applications.

@@ -40,7 +40,9 @@ module.exports = (env, argv) => {
     },
     optimization: {
       minimizer: [
-        new TerserPlugin(),
+        new TerserPlugin({
+          minify: TerserPlugin.swcMinify,
+        }),
       ],
     },
     plugins: [
@@ -51,7 +53,7 @@ module.exports = (env, argv) => {
       }),
       new CopyPlugin({
         patterns: [
-          {from: './public'}
+          { from: './public' },
         ],
       })
     ],

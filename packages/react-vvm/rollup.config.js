@@ -1,6 +1,32 @@
 import typescript from '@rollup/plugin-typescript';
 import define from 'rollup-plugin-define';
-import { terser } from 'rollup-plugin-terser';
+import swc from '@swc/core';
+import tsconfig from './tsconfig.json';
+
+const minify = () => ({
+  async generateBundle(_, bundle) {
+    const [filename, { name, code }] = Object.entries(bundle)[0];
+
+    const minified = await swc.transform(code, {
+      minify: true,
+      jsc: {
+        target: tsconfig.compilerOptions.target,
+        minify: {
+          mangle: true,
+          compress: true,
+        },
+      },
+    });
+
+    delete bundle[filename];
+
+    this.emitFile({
+      type: 'asset',
+      source: minified.code,
+      fileName: filename,
+    });
+  },
+});
 
 export default [false, true].map(isDev => ({
   input: 'src/index.ts',
@@ -12,12 +38,9 @@ export default [false, true].map(isDev => ({
   plugins: [
     typescript({
       tsconfig: `./tsconfig.json`,
-      target: 'es6',
-      ...(!isDev ? {
+      ...(!isDev && {
         declarationDir: 'dist',
         declaration: true,
-      } : {
-        removeComments: true,
       }),
     }),
     define({
@@ -25,7 +48,7 @@ export default [false, true].map(isDev => ({
         __DEV__: JSON.stringify(isDev),
       },
     }),
-    ...(isDev ? [] : [terser()])
+    ...(isDev ? [] : [minify()]),
   ],
   external: [
     'react',
