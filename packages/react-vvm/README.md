@@ -41,7 +41,7 @@ class CounterViewModel extends ViewModel {
     makeObservable(this);
   }
 
-  @action increate = () => {
+  @action increase = () => {
     this.count++;
   };
 }
@@ -49,7 +49,7 @@ class CounterViewModel extends ViewModel {
 const Counter = view(CounterViewModel)(({ viewModel }) => (
   <div>
     <span>Counter: {viewModel.count}</span>
-    <button onClick={() => viewModel.increate()}>increase</button>
+    <button onClick={() => viewModel.increase()}>increase</button>
   </div>
 ));
 ```

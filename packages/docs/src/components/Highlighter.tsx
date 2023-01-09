@@ -6,6 +6,7 @@ import { CopyAll } from '@mui/icons-material';
 
 const Block = styled(Box)`
   position: relative;
+  max-width: 100%;
   
   &:hover .highlighter-copy-button {
     opacity: 1;

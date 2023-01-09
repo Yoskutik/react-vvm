@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { autorun, makeObservable, observable, reaction } from 'mobx';
+/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-use-before-define,no-self-assign */
+import { autorun, makeObservable, reaction } from 'mobx';
 
 type TDisposer = () => void;
 
 /** A base class for view models */
 export abstract class ViewModel<V extends ViewModel | null | unknown = unknown, P = unknown> {
   /** An array of disposers which are called after the view becomes unmounted */
-  private d: TDisposer[] = [];
+  // @ts-ignore
+  private d: TDisposer[];
 
   /** Properties that were given to a view. This object is updated every time the view is rendered with the new props */
+  // @ts-ignore
   readonly viewProps: Readonly<P>;
 
   /**
@@ -25,13 +27,16 @@ export abstract class ViewModel<V extends ViewModel | null | unknown = unknown, 
    *   </div>
    * </View1>
    */
+  // @ts-ignore
   readonly parent: V;
 
   constructor() {
-    this.viewProps = (this as any).viewProps;
-    this.parent = (this as any).parent;
+    const self = this as any;
+    self.d = [];
+    self[PARENT] = self[PARENT];
+    self[VIEW_PROPS] = self[VIEW_PROPS];
     // MobX 4 and MobX5 don't have makeObservable
-    makeObservable && makeObservable(this);
+    makeObservable && makeObservable(self);
   }
 
   /**
@@ -86,19 +91,9 @@ export abstract class ViewModel<V extends ViewModel | null | unknown = unknown, 
 // And why don't I use decorators instead of using Reflect? Because in this case there'll be a lot of code generated
 // in the main file. Using decorators instead of Reflect brings extra 500 characters which is 33% of the whole package.
 
-const prototype = ViewModel.prototype as any;
-
-[
-  [autorun, 'autorun'] as const,
-  [reaction, 'reaction'] as const,
-].forEach(([f, name]) => {
-  prototype[name] = function () {
-    // eslint-disable-next-line prefer-rest-params
-    return this.d[this.d.push((f as any).apply(0, arguments)) - 1];
-  };
-});
-
-(Reflect as any).decorate([
-  observable.ref,
-  (Reflect as any).metadata('design:type', Object),
-], prototype, 'viewProps');
+export const PROTOTYPE = ViewModel.prototype as any,
+  OBJECT = Object,
+  ASSIGN = OBJECT.assign,
+  PARENT = 'parent' as const,
+  VIEW_PROPS = 'viewProps' as const,
+  REFLECT = Reflect as any;

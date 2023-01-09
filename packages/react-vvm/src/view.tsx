@@ -3,8 +3,8 @@ import {
   RefAttributes, forwardRef,
 } from 'react';
 import { observer } from 'mobx-react';
-import { action } from 'mobx';
-import { ViewModel } from './ViewModel';
+import { action, autorun, observable, reaction } from 'mobx';
+import { ASSIGN, OBJECT, PARENT, PROTOTYPE, REFLECT, VIEW_PROPS, ViewModel } from './ViewModel';
 import { Constructable } from './types';
 import { configuration } from './configure';
 
@@ -18,16 +18,19 @@ const createComponent = <P, V, R>(
   vmFactory: (props?: P) => ViewModel | null,
   options: TViewOptions<P> = {},
   vmName?: string,
+
+  isForwardRef = (component as any).$$typeof === Symbol.for('react.forward_ref'),
+  Component?: any,
+  viewModel?: any,
+  element?: any,
 ) => {
-  const isForwardRef = (component as any).$$typeof === Symbol.for('react.forward_ref');
+  Component = (props: P, ref: any) => {
+    viewModel = vmFactory(props);
 
-  let Component: any = (props: P, ref: any) => {
-    const viewModel = vmFactory(props);
-
-    let element: any = createElement(
+    element = createElement(
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useState(() => (options.observer === false ? component : observer(component)))[0],
-      Object.assign({}, props, { viewModel, ref: isForwardRef ? ref : undefined } as any),
+      ASSIGN({}, props, { viewModel, ref: isForwardRef ? ref : undefined } as any),
     );
 
     if (vmName) {
@@ -75,9 +78,10 @@ const useLifeCycle = (
   onUnmounted: string,
   updateCb: (() => void) | null,
   unmountCb?: () => void,
-) => {
-  const wasRendered = useRef(false);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  wasRendered = useRef(false),
+) => {
   hook(() => {
     if (wasRendered.current) {
       updateCb && updateCb();
@@ -117,28 +121,26 @@ export const view = <V extends ViewModel>(VM: Constructable<V>) => (
     ViewComponent: BaseComponent<P, V, R>,
     options?: TViewOptions<P>,
   ): FCWithRef<P, R> => (
-    createComponent(ViewComponent, props => {
-      const parentViewModel = useContext(ViewModelContext);
-      const viewModel: any = useState(() => {
-        const proto = VM.prototype;
-        proto.parent = parentViewModel;
-        proto.viewProps = props;
-        const vm = configuration.vmFactory(VM);
-        delete proto.parent;
-        delete proto.viewProps;
+    createComponent(ViewComponent, (props, viewModel?: any) => {
+      viewModel = useContext(ViewModelContext);
+      viewModel = useState((vm?: any) => {
+        PROTOTYPE[PARENT] = viewModel;
+        PROTOTYPE[VIEW_PROPS] = props;
+        vm = configuration.vmFactory(VM);
+        delete PROTOTYPE[PARENT];
+        delete PROTOTYPE[VIEW_PROPS];
         return vm;
       })[0];
 
-      useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, null, () => {
+      useLifeCycle(useEffect, viewModel, onViewUpdated, onViewMounted, onViewUnmounted, null, () => (
         viewModel.d = viewModel.d.filter((it: () => void) => {
           it();
-        });
-      });
+        })
+      ));
 
-      useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, action(() => {
-        viewModel.viewProps = props;
-        viewModel.parent = parentViewModel;
-      }));
+      useLifeCycle(useLayoutEffect, viewModel, onViewUpdatedSync, onViewMountedSync, onViewUnmountedSync, action(() => (
+        viewModel[VIEW_PROPS] = props
+      )));
 
       return viewModel;
     }, options, VM.name || 'Anonymous')
@@ -157,6 +159,21 @@ export const childView = <V extends ViewModel>() => (
     createComponent(ChildViewComponent, () => useContext(ViewModelContext), options)
   )
 );
+
+for (const [f, name] of [
+  [autorun, 'autorun'] as const,
+  [reaction, 'reaction'] as const,
+]) {
+  PROTOTYPE[name] = function () {
+    // eslint-disable-next-line prefer-rest-params
+    return this.d[this.d.push((f as any).apply(0, arguments)) - 1];
+  };
+}
+
+REFLECT.decorate([
+  observable.ref,
+  REFLECT.metadata('design:type', OBJECT),
+], PROTOTYPE, VIEW_PROPS);
 
 /**
  * A class with which you can create a ChildView. The context of this class is equals to a view model. And also

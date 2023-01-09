@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es6",
+    "target": "es2015",
     "lib": ["dom", "es2018"],
     "jsx": "react-jsx",
     "moduleResolution": "node",
@@ -15,7 +15,7 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@yoskutik/react-vvm": ["src"]
+      "@yoskutik/react-vvm": ["./"]
     }
   },
   "include": ["src", "metadata.d.ts"],

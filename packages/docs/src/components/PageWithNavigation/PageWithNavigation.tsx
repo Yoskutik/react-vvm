@@ -17,7 +17,14 @@ export const PageWithNavigation = view(PageWithNavigationViewModel)<Props>(({ ch
     <ReturnButton/>
     <Grid container wrap="nowrap">
       {!hideNavigation && <AnchorNavigation/>}
-      <Grid justifyContent="center" sx={{ overflow: 'hidden', padding: '2rem 3rem', width: '100%' }}>
+      <Grid
+        justifyContent="center"
+        sx={{
+          padding: { md: '2rem 3rem', xs: '1rem 1.5rem' },
+          overflow: 'hidden',
+          width: '100%',
+        }}
+      >
         <Grid container direction="column" gap={8} style={{ maxWidth: '100%', width: '1200px', margin: '0 auto' }}>
           {children}
         </Grid>
