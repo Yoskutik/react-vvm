@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/ban-ts-comment,@typescript-eslint/no-use-before-define,no-self-assign */
 import { autorun, makeObservable, reaction } from 'mobx';
 
 type TDisposer = () => void;
