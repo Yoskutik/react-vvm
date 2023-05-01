@@ -34,10 +34,10 @@ const bundleTypes = () => ({
   generateBundle(_, bundle) {
     const types = dts.generateDtsBundle([{ filePath: './dist/index.d.ts' }]).join('');
 
-    Object.keys(bundle).filter(it => it.endsWith('.d.ts')).forEach(it => {
+    fs.readdirSync('./dist').filter(it => it.endsWith('.d.ts')).forEach(it => {
       fs.unlinkSync(`./dist/${it}`);
       delete bundle[it];
-    })
+    });
 
     this.emitFile({
       type: 'asset',
@@ -66,7 +66,7 @@ export default [false, true].map(isDev => ({
         __DEV__: JSON.stringify(isDev),
       },
     }),
-    ...(isDev ? [bundleTypes()] : [minify()]),
+    isDev ? bundleTypes() : minify(),
   ],
   external: [
     'react',

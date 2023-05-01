@@ -54,6 +54,34 @@ const Counter = view(CounterViewModel)(({ viewModel }) => (
 ));
 ```
 
+### Or even simpler
+
+You don't need to call `makeObservable` in each ViewModel,
+if you [configure](https://yoskutik.github.io/react-vvm/#/examples?heading=useful-examples.automatic-makeobservable)
+this package.
+
+```typescript jsx
+import { action, observable, makeObservable } from 'mobx';
+import { view, ViewModel } from '@yoskutik/react-vvm';
+
+class CounterViewModel extends ViewModel {
+  @observable count = 0;
+
+  // By the way, this function is automatially memoized,
+  //  so you down need to use useMemo or useCallback
+  @action handleClick = () => {
+    this.count++;
+  };
+}
+
+const Counter = view(CounterViewModel)(({ viewModel }) => (
+  <div>
+    <span>Counter: {viewModel.count}</span>
+    <button onClick={viewModel.handleClick}>increase</button>
+  </div>
+));
+```
+
 That's a basic counter example. The component consists of JSX code only. All the logic is declared
 in the view model. This is a fairly short example. However, the larger the component becomes, the
 better the benefits of the MVVM approach are seen.
