@@ -1,0 +1,30 @@
+.tile {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  //border: 1px solid rgba(#000, 0.5);
+
+  &--idle {
+    //background: #fafafa;
+    background: grey;
+  }
+
+  &--apple {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    &:before {
+      background-color: red;
+      border-radius: 50%;
+      display: block;
+      content: '';
+      height: 80%;
+      width: 80%;
+    }
+  }
+
+  &--snake {
+    background: blue;
+  }
+}

@@ -9,22 +9,19 @@
   "private": true,
   "scripts": {
     "start:docs": "yarn --cwd packages/docs start",
-
     "build:package": "yarn --cwd packages/react-vvm build",
     "build:docs": "yarn --cwd packages/docs build",
     "build": "yarn build:package && yarn build:docs",
-
     "lint:package": "yarn --cwd packages/react-vvm lint",
     "lint:docs": "yarn --cwd packages/docs lint",
     "lint": "yarn lint:package && yarn lint:docs",
-
     "pub": "yarn --cwd packages/react-vvm pub",
-
     "watch:package": "yarn --cwd packages/react-vvm watch",
     "jest": "yarn --cwd packages/react-vvm jest"
   },
   "workspaces": [
     "packages/docs",
     "packages/react-vvm"
-  ]
+  ],
+  "dependencies": {}
 }

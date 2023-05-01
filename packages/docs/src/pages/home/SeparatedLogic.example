@@ -1,13 +1,16 @@
 import { action, makeObservable, observable } from 'mobx';
-import { view, ViewModel } from '@yoskutik/react-vvm';
+import { view, ViewModel, configure } from '@yoskutik/react-vvm';
+
+configure({
+  vmFactory: VM => {
+    const viewModel = new VM();
+    makeObservable(viewModel);
+    return viewModel;
+  },
+});
 
 class CounterViewModel extends ViewModel {
   @observable counter = 0;
-
-  constructor() {
-    super();
-    makeObservable(this);
-  }
 
   @action increase = () => {
     this.counter++;

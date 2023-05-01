@@ -1,0 +1,9 @@
+.map {
+  $size: calc(100vh - 20px);
+
+  box-sizing: border-box;
+  margin: 10px auto;
+  display: grid;
+  height: $size;
+  width: $size;
+}

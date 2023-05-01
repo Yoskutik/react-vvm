@@ -1,6 +1,8 @@
 import typescript from '@rollup/plugin-typescript';
 import define from 'rollup-plugin-define';
 import swc from '@swc/core';
+import dts from 'dts-bundle-generator';
+import fs from 'fs';
 import tsconfig from './tsconfig.json';
 
 const minify = () => ({
@@ -28,11 +30,27 @@ const minify = () => ({
   },
 });
 
+const bundleTypes = () => ({
+  generateBundle(_, bundle) {
+    const types = dts.generateDtsBundle([{ filePath: './dist/index.d.ts' }]).join('');
+
+    Object.keys(bundle).filter(it => it.endsWith('.d.ts')).forEach(it => {
+      fs.unlinkSync(`./dist/${it}`);
+      delete bundle[it];
+    })
+
+    this.emitFile({
+      type: 'asset',
+      source: types,
+      fileName: 'index.d.ts',
+    });
+  },
+});
+
 export default [false, true].map(isDev => ({
   input: 'src/index.ts',
   output: {
     file: `dist/react-vvm.${isDev ? 'development' : 'production'}.js`,
-    preserveModulesRoot: 'src',
     format: 'esm',
   },
   plugins: [
@@ -48,7 +66,7 @@ export default [false, true].map(isDev => ({
         __DEV__: JSON.stringify(isDev),
       },
     }),
-    ...(isDev ? [] : [minify()]),
+    ...(isDev ? [bundleTypes()] : [minify()]),
   ],
   external: [
     'react',

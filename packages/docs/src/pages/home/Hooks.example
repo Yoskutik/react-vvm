@@ -1,30 +1,28 @@
 import { view, ViewModel } from '@yoskutik/react-vvm';
+import { AnyMemoizedComponent } from './AnyMemoizedComponent';
 
 class SomeViewModel extends ViewModel {
-  protected onViewMountedSync() {
-    // This function can be used instead of
-    // useLayoutEffect(() => {
-    //   ...
-    // }, []);
-  }
+  // This function can be used instead of
+  //  useLayoutEffect(() => { ... }, []);
+  protected onViewMountedSync() { }
 
-  protected onViewUnmounted() {
-    // This function can be used instead of
-    // useEffect(() => () => {
-    //   ...
-    // }, []);
-  }
+  // This function can be used instead of
+  //  useEffect(() => { ... }, []);
+  protected onViewUnmounted() { }
 
-  protected onViewUpdated() {
-    // This function can be used partially instead of
-    // useEffect(() => {
-    //   ...
-    // });
-  }
+  // This function can be used partially instead of
+  //  useEffect(() => { ... });
+  protected onViewUpdated() { }
+
+  // Any function that created in a ViewModel is memoized,
+  //  so you don't need to use useMemo or useCallback
+  handleClick = () => { ... };
 }
 
-const SomeView = view(SomeViewModel)(() => (
+const SomeView = view(SomeViewModel)(({ viewModel }) => (
   <div>
     Thus, the view can start to consist exclusively of JSX code
+
+    <AnyMemoizedComponent onClick={viewModel.handleClick} />
   </div>
 ));
